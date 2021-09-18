@@ -88,6 +88,7 @@
                         <outlet property="bluetoothOffLabel" destination="biY-id-bgd" id="DRO-hM-PIM"/>
                         <outlet property="connectionActivityStatus" destination="de5-zw-nBC" id="pVd-IZ-gMz"/>
                         <outlet property="tableView" destination="pgf-fx-yEU" id="R7P-rD-RG9"/>
+                        <outlet property="weightDataLabel" destination="cYT-mv-BFP" id="dny-sm-TFV"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
