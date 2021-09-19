@@ -266,17 +266,61 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         //Fetch fish from the Core Data to display in table view
         // This fetch is pulling all data...review the video for pull data in sort order fro the final app
         do {
-            self.items = try context.fetch(Fish_Table.fetchRequest())
+            //FILTERING
+            /*let request = Fish_Table.fetchRequest() as NSFetchRequest<Fish_Table>
+            let pred = NSPredicate(format: "fish_ID CONTAINS 'Green'")
+            request.predicate = pred
+            self.items = try context.fetch(request)
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }*/
+            //SORTING
+            let request = Fish_Table.fetchRequest() as NSFetchRequest<Fish_Table>
+            let sort = NSSortDescriptor(key: "weight", ascending: false)
+            request.sortDescriptors = [sort]
+            self.items = try context.fetch(request)
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
-            
+            print("Sort ran....")
         } catch {
             
         }
             
     }
 
+    @IBAction func captureWeight(_ sender: Any) {
+        //let alert = UIAlertController(title: "Add weight", message: nil, preferredStyle: .alert)
+        //alert.addTextField()
+        
+        //let submitButton = UIAlertAction(title: "Add", style: .default) { (action ) in
+            
+            
+            //https://stackoverflow.com/questions/31922349/how-to-add-textfield-to-uialertcontroller-in-swift
+            
+            let newFish = Fish_Table(context: self.context)
+            newFish.fish_ID = "Green"
+            
+            let number: Float = Float(self.weightDataLabel.text ?? "N/A" ) ?? 1.0
+            newFish.weight = number
+            newFish.date = Date()
+            
+            do {
+                try self.context.save()
+            }
+            catch {
+                
+            }
+            self.fetchFish()
+            print("Sort ran again....")
+        
+    //}
+        
+        //alert.addAction(submitButton)
+        
+       // self.present(alert, animated:true, completion: nil)
+    
+    }
     
     @IBAction func addTapped(_ sender: AnyObject) {
         let alert = UIAlertController(title: "Add Fish", message: "What is the cork color and fish weight", preferredStyle: .alert)
