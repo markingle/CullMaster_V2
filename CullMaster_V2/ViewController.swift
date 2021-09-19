@@ -184,7 +184,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
     
     for service in peripheral.services! {
         
-        if service.uuid == Weight_Characteristic_CBUUID {
+        if service.uuid == Weight_Scale_Service_CBUUID {
             
             print("Service: \(service)")
             
@@ -213,6 +213,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                 print("Weight Data")
                 WeightData = characteristic
                 peripheral.setNotifyValue(true, for: characteristic)
+                peripheral.readValue(for: characteristic)
             }
             if characteristic.uuid == Tare_Characteristic_CBUUID{
                 print("Tare Flag")
@@ -222,20 +223,25 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         }
     } // END func peripheral(... didDiscoverCharacteristicsFor service
     
+    //https://quickbirdstudios.com/blog/read-ble-characteristics-swift/
+    
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+        
+        print(characteristic)
         
         if characteristic.uuid == Weight_Characteristic_CBUUID {
             
-            // STEP 14: we generally have to decode BLE
+            // We generally have to decode BLE
             // data into human readable format
-            let count_n_seconds = [UInt8](characteristic.value!)
             
-            print("Weight Recieved", count_n_seconds[0])
-
+            let weight = characteristic.value!
+            print(String(data: weight, encoding: String.Encoding.ascii)!);
+            
             DispatchQueue.main.async { () -> Void in
-                self.weightDataLabel.text = String(count_n_seconds[0])
-            }
+                self.weightDataLabel.text = String(data: weight, encoding: String.Encoding.ascii)
+
         } // END if characteristic.uuid ==...
+        }
         
     } // END func peripheral(... didUpdateValueFor characteristic
     
