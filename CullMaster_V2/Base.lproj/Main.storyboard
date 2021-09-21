@@ -61,6 +61,9 @@
                                 <state key="normal" title="Weigh">
                                     <color key="titleColor" red="0.94493423105247631" green="1" blue="0.9472269170266534" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
+                                <connections>
+                                    <action selector="captureWeight:" destination="BYZ-38-t0r" eventType="touchUpInside" id="HIH-kv-CXS"/>
+                                </connections>
                             </button>
                             <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="00.000" borderStyle="roundedRect" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cYT-mv-BFP">
                                 <rect key="frame" x="69" y="148" width="251" height="94"/>
@@ -88,6 +91,7 @@
                         <outlet property="bluetoothOffLabel" destination="biY-id-bgd" id="DRO-hM-PIM"/>
                         <outlet property="connectionActivityStatus" destination="de5-zw-nBC" id="pVd-IZ-gMz"/>
                         <outlet property="tableView" destination="pgf-fx-yEU" id="R7P-rD-RG9"/>
+                        <outlet property="weightDataLabel" destination="cYT-mv-BFP" id="dny-sm-TFV"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
