@@ -292,16 +292,16 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
     
     func totalWeight() -> NSNumber? {
             
-            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-                return 1
-            }
+            //guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            //    return 1
+            //}
             
             //1
-            let managedContext = appDelegate.persistentContainer.viewContext
+            //let managedContext = appDelegate.persistentContainer.viewContext
             
             //2
             let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
-            fetchRequest.entity = NSEntityDescription.entity(forEntityName: "Fish_Table", in: managedContext)
+            fetchRequest.entity = NSEntityDescription.entity(forEntityName: "Fish_Table", in: context)
             fetchRequest.resultType = NSFetchRequestResultType.dictionaryResultType
             
             //3
@@ -320,7 +320,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             fetchRequest.propertiesToFetch = [expressionDescription]
             
             do {
-                let result = try managedContext.fetch(fetchRequest) as! [NSDictionary]
+                let result = try context.fetch(fetchRequest) as! [NSDictionary]
                 
                 let resultDic = result.first!
                 let total_weight = resultDic["totalweight"]!
@@ -338,16 +338,16 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             //Fetch fish from the Core Data to display in table view
             // This fetch is pulling all data...review the video for pull data in sort order fro the final app
             
-            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-                return 1
-            }
+            //guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            //    return 1
+            //}
             
             //1
-            let managedContext = appDelegate.persistentContainer.viewContext
+            //let managedContext = appDelegate.persistentContainer.viewContext
             
             //2
             let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
-            fetchRequest.entity = NSEntityDescription.entity(forEntityName: "Fish_Table", in: managedContext)
+            fetchRequest.entity = NSEntityDescription.entity(forEntityName: "Fish_Table", in: context)
             fetchRequest.resultType = NSFetchRequestResultType.dictionaryResultType
             
             //3
@@ -368,7 +368,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             //var minweight: Float? = nil
             
             do {
-                let result = try managedContext.fetch(fetchRequest) as! [NSDictionary]
+                let result = try context.fetch(fetchRequest) as! [NSDictionary]
                 
                 let resultDic = result.first!
                 let numDeals = resultDic["minweight"]!
