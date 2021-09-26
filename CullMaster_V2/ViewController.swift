@@ -18,8 +18,8 @@ let Weight_Scale_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c3
 //let Cork5_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c3319141")
 
 // MARK: - Core Bluetooth characteristic IDs
-let Weight_Characteristic_CBUUID = CBUUID(string: "beb5483e-36e1-4688-b7f5-ea07361b26a6")
-let Tare_Characteristic_CBUUID = CBUUID(string: "beb5483e-36e1-4688-b7f5-ea07361b26a7")
+let Weight_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F5-EA07361B26A6")
+let Tare_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F6-EA07361B26B7")
 
 class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDelegate {
     // MARK: - Core Bluetooth class member variables
@@ -33,6 +33,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
     //var Cork1: CBPeripheral?
     
     @IBOutlet weak var weightDataLabel: UITextField!
+    @IBOutlet weak var totalWeightLabel: UITextField!
     
     @IBOutlet weak var connectionActivityStatus: UIActivityIndicatorView!
     @IBOutlet weak var bluetoothOffLabel: UILabel!
@@ -282,12 +283,101 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
-            print("Sort ran....")
+            totalWeight()
         } catch {
             
         }
             
     }
+    
+    func totalWeight() -> NSNumber? {
+            
+            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+                return 1
+            }
+            
+            //1
+            let managedContext = appDelegate.persistentContainer.viewContext
+            
+            //2
+            let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
+            fetchRequest.entity = NSEntityDescription.entity(forEntityName: "Fish_Table", in: managedContext)
+            fetchRequest.resultType = NSFetchRequestResultType.dictionaryResultType
+            
+            //3
+            let keypathExpression = NSExpression(forKeyPath: "weight")
+            let maxExpression = NSExpression(forFunction: "sum:", arguments: [keypathExpression])
+            
+            let key = "totalweight"
+            
+            //4
+            let expressionDescription = NSExpressionDescription()
+            expressionDescription.name = key
+            expressionDescription.expression = maxExpression
+            expressionDescription.expressionResultType = .decimalAttributeType
+            
+            //5
+            fetchRequest.propertiesToFetch = [expressionDescription]
+            
+            do {
+                let result = try managedContext.fetch(fetchRequest) as! [NSDictionary]
+                
+                let resultDic = result.first!
+                let total_weight = resultDic["totalweight"]!
+                    print("Total Weight : \(total_weight)")
+                DispatchQueue.main.async { () -> Void in
+                    self.totalWeightLabel.text! = "\(total_weight)"
+                }
+            } catch {
+                print("fetch failed")
+            }
+            return 123
+        }
+    
+    func showsmallest() -> NSNumber? {
+            //Fetch fish from the Core Data to display in table view
+            // This fetch is pulling all data...review the video for pull data in sort order fro the final app
+            
+            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+                return 1
+            }
+            
+            //1
+            let managedContext = appDelegate.persistentContainer.viewContext
+            
+            //2
+            let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
+            fetchRequest.entity = NSEntityDescription.entity(forEntityName: "Fish_Table", in: managedContext)
+            fetchRequest.resultType = NSFetchRequestResultType.dictionaryResultType
+            
+            //3
+            let keypathExpression = NSExpression(forKeyPath: "weight")
+            let maxExpression = NSExpression(forFunction: "min:", arguments: [keypathExpression])
+            
+            let key = "minweight"
+            
+            //4
+            let expressionDescription = NSExpressionDescription()
+            expressionDescription.name = key
+            expressionDescription.expression = maxExpression
+            expressionDescription.expressionResultType = .decimalAttributeType
+            
+            //5
+            fetchRequest.propertiesToFetch = [expressionDescription]
+            
+            //var minweight: Float? = nil
+            
+            do {
+                let result = try managedContext.fetch(fetchRequest) as! [NSDictionary]
+                
+                let resultDic = result.first!
+                let numDeals = resultDic["minweight"]!
+                    print("Min Weight : \(numDeals)")
+            } catch {
+                print("fetch failed")
+            }
+            return 123
+        }
 
     @IBAction func captureWeight(_ sender: Any) {
         //let alert = UIAlertController(title: "Add weight", message: nil, preferredStyle: .alert)
@@ -301,19 +391,18 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             let newFish = Fish_Table(context: self.context)
             newFish.fish_ID = "Green"
             
-            let number: Float = Float(self.weightDataLabel.text ?? "N/A" ) ?? 1.0
-            newFish.weight = number
-            newFish.date = Date()
-            
-            do {
-                try self.context.save()
-            }
-            catch {
-                
-            }
-            self.fetchFish()
-            print("Sort ran again....")
-        
+        let number: NSDecimalNumber = NSDecimalNumber(string: self.weightDataLabel.text ?? "111" )
+                    newFish.weight = number
+                    newFish.date = Date()
+                    
+                    do {
+                        try self.context.save()
+                    }
+                    catch {
+                        
+                    }
+                    self.fetchFish()
+                    self.showsmallest()
     //}
         
         //alert.addAction(submitButton)
@@ -337,7 +426,8 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             let newFish = Fish_Table(context: self.context)
             newFish.fish_ID = textfield1.text
             
-            let number: Float = Float(textfield2.text ?? "N/A" ) ?? 1.0
+            
+            let number: NSDecimalNumber = NSDecimalNumber(string: textfield2.text ?? "N/A" )
             newFish.weight = number
             newFish.date = Date()
             
@@ -357,6 +447,21 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         self.present(alert, animated:true, completion: nil)
     
     }
+    
+    func writeonStateValueToChar( withCharacteristic characteristic: CBCharacteristic, withValue value: Data) {
+        if characteristic.properties.contains(.writeWithoutResponse) && WeightScale != nil {
+            WeightScale?.writeValue(value, for: characteristic, type:.withoutResponse)
+        }
+    }
+    
+    @IBAction func sendTareRequest(_ sender: Any) {
+        print("Hello Tare")
+        let SwitchState = "1"
+        let data = Data(SwitchState.utf8)
+        print("data = ", data)
+        writeonStateValueToChar(withCharacteristic: TareFlag!, withValue: data)
+    }
+    
 }
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource{
@@ -374,7 +479,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource{
         let fish = self.items![indexPath.row]
         
         let fish_ID = fish.fish_ID
-        let fish_weight = String(fish.weight)
+        let fish_weight = fish.weight!
         let caught_date = fish.date!
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "en_US")
