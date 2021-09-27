@@ -2,7 +2,7 @@
 //  Fish_Table+CoreDataProperties.swift
 //  CullMaster_V2
 //
-//  Created by Mark Brady Ingle on 9/25/21.
+//  Created by Mark Brady Ingle on 9/26/21.
 //
 //
 
@@ -19,6 +19,8 @@ extension Fish_Table {
     @NSManaged public var date: Date?
     @NSManaged public var fish_ID: String?
     @NSManaged public var weight: NSDecimalNumber?
+    @NSManaged public var gps: Float
+    @NSManaged public var picture: Data?
 
 }
 

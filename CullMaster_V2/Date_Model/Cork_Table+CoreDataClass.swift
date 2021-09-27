@@ -1,5 +1,5 @@
 //
-//  Fish_Table+CoreDataClass.swift
+//  Cork_Table+CoreDataClass.swift
 //  CullMaster_V2
 //
 //  Created by Mark Brady Ingle on 9/26/21.
@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-@objc(Fish_Table)
-public class Fish_Table: NSManagedObject {
+@objc(Cork_Table)
+public class Cork_Table: NSManagedObject {
 
 }

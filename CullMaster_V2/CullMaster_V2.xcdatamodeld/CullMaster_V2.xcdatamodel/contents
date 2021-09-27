@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19206" systemVersion="20G95" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Cork_Table" representedClassName="Cork_Table" syncable="YES">
+        <attribute name="mAC" optional="YES" attributeType="String"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="used" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+    </entity>
     <entity name="Fish_Table" representedClassName="Fish_Table" syncable="YES">
         <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="fish_ID" optional="YES" attributeType="String"/>
+        <attribute name="gps" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="picture" optional="YES" attributeType="Binary"/>
         <attribute name="weight" optional="YES" attributeType="Decimal" defaultValueString="0.0"/>
     </entity>
     <elements>
-        <element name="Fish_Table" positionX="-54" positionY="-9" width="128" height="74"/>
+        <element name="Fish_Table" positionX="-54" positionY="-9" width="128" height="104"/>
+        <element name="Cork_Table" positionX="-54" positionY="27" width="128" height="74"/>
     </elements>
 </model>
