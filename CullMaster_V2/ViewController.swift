@@ -328,38 +328,27 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             }
     }
     
-    func showsmallest() -> NSNumber {
-            //Fetch fish from the Core Data to display in table view
-            // This fetch is pulling all data...review the video for pull data in sort order fro the final app
-            
-            //guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-            //    return 1
-            //}
+    func showsmallest() {
             
             //1
-            //let managedContext = appDelegate.persistentContainer.viewContext
-            
-            //2
             let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
             fetchRequest.entity = NSEntityDescription.entity(forEntityName: "Fish_Table", in: context)
             fetchRequest.resultType = NSFetchRequestResultType.dictionaryResultType
             
-            //3
+            //2
             let keypathExpression = NSExpression(forKeyPath: "weight")
             let maxExpression = NSExpression(forFunction: "min:", arguments: [keypathExpression])
             
             let key = "minweight"
             
-            //4
+            //3
             let expressionDescription = NSExpressionDescription()
             expressionDescription.name = key
             expressionDescription.expression = maxExpression
             expressionDescription.expressionResultType = .decimalAttributeType
             
-            //5
+            //4
             fetchRequest.propertiesToFetch = [expressionDescription]
-            
-            //var minweight: Float? = nil
             
             do {
                 let result = try context.fetch(fetchRequest) as! [NSDictionary]
@@ -370,7 +359,6 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             } catch {
                 print("fetch failed")
             }
-            return 123
         }
 
     @IBAction func captureWeight(_ sender: Any) {
