@@ -19,6 +19,7 @@
 		0A99168F270151A80043DE65 /* Fish_Table+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A99168B270151A80043DE65 /* Fish_Table+CoreDataProperties.swift */; };
 		0A991690270151A80043DE65 /* Cork_Table+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A99168C270151A80043DE65 /* Cork_Table+CoreDataClass.swift */; };
 		0A991691270151A80043DE65 /* Cork_Table+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A99168D270151A80043DE65 /* Cork_Table+CoreDataProperties.swift */; };
+		0A9916932703F0620043DE65 /* CorkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9916922703F0620043DE65 /* CorkViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 		0A99168B270151A80043DE65 /* Fish_Table+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Fish_Table+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0A99168C270151A80043DE65 /* Cork_Table+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Cork_Table+CoreDataClass.swift"; sourceTree = "<group>"; };
 		0A99168D270151A80043DE65 /* Cork_Table+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Cork_Table+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		0A9916922703F0620043DE65 /* CorkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CorkViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,10 +70,10 @@
 		0A79AAA226F410D500F76D83 /* CullMaster_V2 */ = {
 			isa = PBXGroup;
 			children = (
-				0A79AABE26F4117400F76D83 /* Date_Model */,
+				0A9916942703F0740043DE65 /* View Controllers */,
+				0A79AABE26F4117400F76D83 /* Data_Model */,
 				0A79AAA326F410D500F76D83 /* AppDelegate.swift */,
 				0A79AAA526F410D500F76D83 /* SceneDelegate.swift */,
-				0A79AAA726F410D500F76D83 /* ViewController.swift */,
 				0A79AAA926F410D500F76D83 /* Main.storyboard */,
 				0A79AABF26F5A09600F76D83 /* FriendlyAdvData.swift */,
 				0A79AAAF26F410D800F76D83 /* Assets.xcassets */,
@@ -82,7 +84,7 @@
 			path = CullMaster_V2;
 			sourceTree = "<group>";
 		};
-		0A79AABE26F4117400F76D83 /* Date_Model */ = {
+		0A79AABE26F4117400F76D83 /* Data_Model */ = {
 			isa = PBXGroup;
 			children = (
 				0A99168A270151A80043DE65 /* Fish_Table+CoreDataClass.swift */,
@@ -90,7 +92,16 @@
 				0A99168C270151A80043DE65 /* Cork_Table+CoreDataClass.swift */,
 				0A99168D270151A80043DE65 /* Cork_Table+CoreDataProperties.swift */,
 			);
-			path = Date_Model;
+			path = Data_Model;
+			sourceTree = "<group>";
+		};
+		0A9916942703F0740043DE65 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				0A79AAA726F410D500F76D83 /* ViewController.swift */,
+				0A9916922703F0620043DE65 /* CorkViewController.swift */,
+			);
+			path = "View Controllers";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -170,6 +181,7 @@
 				0A79AAA426F410D500F76D83 /* AppDelegate.swift in Sources */,
 				0A79AAA626F410D500F76D83 /* SceneDelegate.swift in Sources */,
 				0A99168F270151A80043DE65 /* Fish_Table+CoreDataProperties.swift in Sources */,
+				0A9916932703F0620043DE65 /* CorkViewController.swift in Sources */,
 				0A991690270151A80043DE65 /* Cork_Table+CoreDataClass.swift in Sources */,
 				0A991691270151A80043DE65 /* Cork_Table+CoreDataProperties.swift in Sources */,
 			);

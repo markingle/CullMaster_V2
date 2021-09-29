@@ -37,12 +37,14 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
     
     @IBOutlet weak var connectionActivityStatus: UIActivityIndicatorView!
     @IBOutlet weak var bluetoothOffLabel: UILabel!
+
+    @IBOutlet weak var catchHistory: UITabBar!
+    
+    @IBOutlet weak var cullCorkList: UITabBar!
     
     // Characteristics
     private var WeightData: CBCharacteristic?
     private var TareFlag: CBCharacteristic?
-    
-    
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -393,41 +395,18 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
     
     }
     
-    @IBAction func addTapped(_ sender: AnyObject) {
-        let alert = UIAlertController(title: "Add Fish", message: "What is the cork color and fish weight", preferredStyle: .alert)
-        alert.addTextField()
-        alert.addTextField()
-        
-        let submitButton = UIAlertAction(title: "Add", style: .default) { (action ) in
-            
-            let textfield1 = alert.textFields![0]
-            let textfield2 = alert.textFields![1]
-            
-            //https://stackoverflow.com/questions/31922349/how-to-add-textfield-to-uialertcontroller-in-swift
-            
-            let newFish = Fish_Table(context: self.context)
-            newFish.fish_ID = textfield1.text
-            
-            
-            let number: NSDecimalNumber = NSDecimalNumber(string: textfield2.text ?? "N/A" )
-            newFish.weight = number
-            newFish.date = Date()
-            
-            do {
-                try self.context.save()
-            }
-            catch {
-                
-            }
-            self.fetchFish()
-        
-           
+    @IBAction func corkList(){
+        guard let vc = storyboard!.instantiateViewController(withIdentifier: "Cork_VC_ID") as? CorkViewController else {
+            return
+        }
+                present(vc, animated: true)
     }
-        
-        alert.addAction(submitButton)
-        
-        self.present(alert, animated:true, completion: nil)
     
+    @IBAction func catchListView(){
+        guard let vc = storyboard!.instantiateViewController(withIdentifier: "Cork_VC_ID") as? CorkViewController else {
+            return
+        }
+                present(vc, animated: true)
     }
     
     func writeonStateValueToChar( withCharacteristic characteristic: CBCharacteristic, withValue value: Data) {

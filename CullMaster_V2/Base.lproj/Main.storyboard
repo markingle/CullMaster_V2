@@ -22,10 +22,27 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <items>
                                     <navigationItem title="Cull Master Catch List" id="9cS-kQ-rRg">
-                                        <barButtonItem key="rightBarButtonItem" title="Item" image="plus" catalog="system" id="bbP-kY-Iwp">
-                                            <connections>
-                                                <action selector="addTapped:" destination="BYZ-38-t0r" id="oND-3J-XBC"/>
-                                            </connections>
+                                        <barButtonItem key="leftBarButtonItem" style="plain" id="hOv-h6-kWx">
+                                            <button key="customView" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="MOm-of-xR6">
+                                                <rect key="frame" x="20" y="5" width="92" height="34.5"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="History"/>
+                                                <connections>
+                                                    <action selector="catchListView" destination="BYZ-38-t0r" eventType="touchUpInside" id="Ikr-IV-jj7"/>
+                                                </connections>
+                                            </button>
+                                        </barButtonItem>
+                                        <barButtonItem key="rightBarButtonItem" style="plain" id="XIM-xZ-yu0">
+                                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="ZIV-0w-G7u">
+                                                <rect key="frame" x="302" y="4.5" width="92" height="35"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="Corks"/>
+                                                <connections>
+                                                    <action selector="corkList" destination="BYZ-38-t0r" eventType="touchUpInside" id="92Z-9W-PxB"/>
+                                                </connections>
+                                            </button>
                                         </barButtonItem>
                                     </navigationItem>
                                 </items>
@@ -123,9 +140,48 @@
             </objects>
             <point key="canvasLocation" x="18.840579710144929" y="93.75"/>
         </scene>
+        <!--Cork View Controller-->
+        <scene sceneID="jqL-98-WeX">
+            <objects>
+                <viewController storyboardIdentifier="Cork_VC_ID" id="iAl-k0-VKI" customClass="CorkViewController" customModule="CullMaster_V2" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="lIm-U3-BGm">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="94P-61-ljf">
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="FishCell_History" id="TJM-Jb-DR5">
+                                        <rect key="frame" x="0.0" y="44.5" width="414" height="43.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="TJM-Jb-DR5" id="YfP-UW-6wL">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="IXd-Gx-6s4"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="94P-61-ljf" firstAttribute="leading" secondItem="IXd-Gx-6s4" secondAttribute="leading" id="Ncz-GT-h14"/>
+                            <constraint firstItem="IXd-Gx-6s4" firstAttribute="trailing" secondItem="94P-61-ljf" secondAttribute="trailing" id="VwB-NV-YUS"/>
+                            <constraint firstItem="94P-61-ljf" firstAttribute="top" secondItem="IXd-Gx-6s4" secondAttribute="top" id="jBJ-Ru-Fd3"/>
+                            <constraint firstItem="IXd-Gx-6s4" firstAttribute="bottom" secondItem="94P-61-ljf" secondAttribute="bottom" id="sAs-EB-ZQp"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="cullCorkList" destination="94P-61-ljf" id="Mcn-Un-Pbm"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Spg-2M-8Fa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="643" y="94"/>
+        </scene>
     </scenes>
     <resources>
-        <image name="plus" catalog="system" width="128" height="113"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
