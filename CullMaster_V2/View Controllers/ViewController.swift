@@ -11,7 +11,7 @@ import CoreBluetooth
 // MARK: - Core Bluetooth service IDs
 let Weight_Scale_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c331914b")
 
-//let Cork1_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c331914c")
+let Cork1_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c331914c")
 //let Cork2_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c331914d")
 //let Cork3_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c331914e")
 //let Cork4_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c331914f")
@@ -30,7 +30,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
     // these vars cannot be listed in an extension so place them in the class
     var centralManager: CBCentralManager?
     var WeightScale: CBPeripheral?
-    //var Cork1: CBPeripheral?
+    var Cork1: CBPeripheral?
     
     @IBOutlet weak var weightDataLabel: UITextField!
     @IBOutlet weak var totalWeightLabel: UITextField!
@@ -52,6 +52,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
     
     //Get array of data that provides the Data View
     var items:[Fish_Table]?
+    var corks:[Cork_Table]?
     
     //MARK: - VIEWDIDLOAD
     
@@ -105,66 +106,67 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                     
                 }
                 
-                //https://uynguyen.github.io/2020/08/23/Best-practice-Advanced-BLE-scanning-process-on-iOS/
-                //https://www.bluetooth.com/blog/a-new-way-to-debug-iosbluetooth-applications/
-                // Scan for peripherals that we're interested in
+                //uynguyen.github.io/2020/08/23/Best-practice-Advanced-BLE-scanning-process-on-iOS/
+                //www.bluetooth.com/blog/a-new-way-to-debug-iosbluetooth-applications/
+                //toscode.gitee.com/pingdan/IOS-CoreBluetooth-Mock/tree/develop
+                //Scan for peripherals that we're interested in
                 //[Weight_Scale_Service_CBUUID,Cork1_Service_CBUUID, Cork2_Service_CBUUID,Cork3_Service_CBUUID,Cork4_Service_CBUUID,Cork5_Service_CBUUID]
-                /*centralManager?.scanForPeripherals(withServices: [Cork1_Service_CBUUID, Weight_Scale_Service_CBUUID], options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
-                print("Central Manager Looking!!")*/
-                centralManager?.scanForPeripherals(withServices: [Weight_Scale_Service_CBUUID])
-                print("Central Manager Looking!!")
+                //centralManager?.scanForPeripherals(withServices: [Cork1_Service_CBUUID, Weight_Scale_Service_CBUUID], options: [CBCentralManagerScanOptionSolicitedServiceUUIDsKey: true])
+                //print("Central Manager Looking!!")
+
+                centralManager?.scanForPeripherals(withServices: [Weight_Scale_Service_CBUUID,Cork1_Service_CBUUID])
+                //print("Central Manager Looking!!")
             default: break
             } // END switch
             
         }
     
-    // STEP 4.1: discover what peripheral devices OF INTEREST
-    // are available for this app to connect to
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-       /* _ = FriendlyAdvData(rawAdvData: advertisementData, rssi: RSSI, friendlyName: peripheral.name)
+       _ = FriendlyAdvData(rawAdvData: advertisementData, rssi: RSSI, friendlyName: peripheral.name)
         
         if peripheral.name == "CORK1"{
             print("Found the peripheral called CORK1")
+            print("\(String(describing: peripheral.name))")
+            let newCork = Cork_Table(context: self.context)
+            newCork.name = (String(describing: peripheral.name))
+            newCork.mAC = "11-22-33-44-55-66"
+            newCork.used = 1
+                        
+            do {
+                try self.context.save()
+                }
+            catch {
+            }
             decodePeripheralState(peripheralState: peripheral.state)
             Cork1 = peripheral
             Cork1?.delegate = self
             centralManager?.connect(Cork1!)
+            decodePeripheralState(peripheralState: peripheral.state)
         }
         if peripheral.name == "WSALE"{
             print("Found the peripheral called WSALE")
             decodePeripheralState(peripheralState: peripheral.state)
             WeightScale = peripheral
             WeightScale?.delegate = self
-            centralManager?.stopScan()
             centralManager?.connect(WeightScale!)
-        }*/
-        print("Peripheral Found ",peripheral.name!)
+            decodePeripheralState(peripheralState: peripheral.state)
+        }
+        /*print("Peripheral Found ",peripheral.name!)
         decodePeripheralState(peripheralState: peripheral.state)
-        // STEP 4.2: MUST store a reference to the peripheral in
-        // class instance variable
         WeightScale = peripheral
-        // STEP 4.3: since ViewController
-        // adopts the CBPeripheralDelegate protocol,
-        // the SeaArkLivewellTimer must set its
-        // delegate property to ViewController
-        // (self)
-        WeightScale?.delegate = self
+        WeightScale?.delegate = self*/
         
         // Cork1 = peripheral
-        // STEP 4.3: since ViewController
-        // adopts the CBPeripheralDelegate protocol,
-        // the SeaArkLivewellTimer must set its
-        // delegate property to ViewController
-        // (self)
         // Cork1?.delegate = self
         
         // STEP 5: stop scanning to preserve battery life;
         // re-scan if disconnected
-        centralManager?.stopScan()
-        print("Stopped Scanning")
+        //centralManager?.stopScan()
+        //print("Stopped Scanning")
         
         // STEP 6: connect to the discovered peripheral of interest
-        centralManager?.connect(WeightScale!)
+        //centralManager?.connect(WeightScale!)
+        
         
         
     } // END func centralManager(... didDiscover peripheral
@@ -178,8 +180,12 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         }
         
         // STEP 8: look for services of interest on peripheral
-        print("Did Connect....Looking for Scale")
+        print("Did Connect....Looking for Scale Service")
         WeightScale?.discoverServices([Weight_Scale_Service_CBUUID])
+        print("Did Connect....Looking for Cork Service")
+        Cork1?.discoverServices([Cork1_Service_CBUUID])
+        print("Stopping Scan for Peripherals")
+        centralManager?.stopScan()
 
     } // END func centralManager(... didConnect peripheral
     
@@ -196,14 +202,24 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             peripheral.discoverCharacteristics(nil, for: service)
             
         }
+        
+        if service.uuid == Cork1_Service_CBUUID {
+            
+            print("Service: \(service)")
+            
+            // STEP 9: look for characteristics of interest
+            // within services of interest
+            peripheral.discoverCharacteristics(nil, for: service)
+            
+        }
         }
     }
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         connectionActivityStatus.backgroundColor = UIColor.black
         connectionActivityStatus.startAnimating()
-        centralManager?.scanForPeripherals(withServices: [Weight_Scale_Service_CBUUID])
-        print("Central Manager Looking!!")
+        centralManager?.scanForPeripherals(withServices: [Cork1_Service_CBUUID, Weight_Scale_Service_CBUUID], options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
+        print("Peripheral disconnect.....Central Manager Looking!!")
     }
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
@@ -281,6 +297,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             let request = Fish_Table.fetchRequest() as NSFetchRequest<Fish_Table>
             let sort = NSSortDescriptor(key: "weight", ascending: false)
             request.sortDescriptors = [sort]
+            request.fetchLimit = 5
             self.items = try context.fetch(request)
             DispatchQueue.main.async {
                 self.tableView.reloadData()

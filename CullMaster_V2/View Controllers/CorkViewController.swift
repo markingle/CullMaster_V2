@@ -16,6 +16,7 @@ class CorkViewController: UIViewController {
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     var items:[Fish_Table]?
+    var corks:[Cork_Table]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,7 +24,7 @@ class CorkViewController: UIViewController {
         cullCorkList.dataSource = self
         cullCorkList.delegate = self
         
-        fetchFish()
+        showCorks()
         
     }
 
@@ -38,7 +39,7 @@ class CorkViewController: UIViewController {
     }
     */
 
-    func fetchFish() {
+    func showCorks() {
         //Fetch fish from the Core Data to display in table view
         // This fetch is pulling all data...review the video for pull data in sort order fro the final app
         do {
@@ -51,10 +52,10 @@ class CorkViewController: UIViewController {
                 self.tableView.reloadData()
             }*/
             //SORTING
-            let request = Fish_Table.fetchRequest() as NSFetchRequest<Fish_Table>
-            let sort = NSSortDescriptor(key: "weight", ascending: false)
+            let request = Cork_Table.fetchRequest() as NSFetchRequest<Cork_Table>
+            let sort = NSSortDescriptor(key: "name", ascending: false)
             request.sortDescriptors = [sort]
-            self.items = try context.fetch(request)
+            self.corks = try context.fetch(request)
             DispatchQueue.main.async {
                 self.cullCorkList.reloadData()
             }
@@ -68,7 +69,7 @@ class CorkViewController: UIViewController {
 
 extension CorkViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.items?.count ?? 0
+        return self.corks?.count ?? 0
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -78,18 +79,16 @@ extension CorkViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "FishCell_History", for: indexPath)
         
-        let fish = self.items![indexPath.row]
+        print("table view called")
+        let corks = self.corks![indexPath.row]
         
-        let fish_ID = fish.fish_ID
-        let fish_weight = fish.weight!
-        let caught_date = fish.date!
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(identifier: "en_US")
-        dateFormatter.dateFormat = "MM/dd/yy | hh:mm:ss"
+        let fish_ID = corks.name
+        let fish_weight = corks.mAC
+        let caught_date = corks.used
         
         //https://www.brianadvent.com/build-simple-core-data-driven-ios-app/
         
-        cell.textLabel?.text = fish_ID! + " | " + "\(String(describing: fish_weight))" + " | " +  dateFormatter.string(from: caught_date)
+        cell.textLabel?.text = fish_ID! + " | " + "\(String(describing: fish_weight))"
         print("helo.......)")
         return cell
     }
@@ -109,7 +108,7 @@ extension CorkViewController: UITableViewDelegate, UITableViewDataSource{
                 
             }
             
-            self.fetchFish()
+            self.showCorks()
         }
             
         // Return the swipe action
