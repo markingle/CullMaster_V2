@@ -127,8 +127,9 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         if peripheral.name == "CORK1"{
             print("Found the peripheral called CORK1")
             print("\(String(describing: peripheral.name))")
+            let name = peripheral.name
             let newCork = Cork_Table(context: self.context)
-            newCork.name = (String(describing: peripheral.name))
+            newCork.name = name
             newCork.mAC = "11-22-33-44-55-66"
             newCork.used = 1
                         

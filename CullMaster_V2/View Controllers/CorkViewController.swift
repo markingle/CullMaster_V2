@@ -82,13 +82,13 @@ extension CorkViewController: UITableViewDelegate, UITableViewDataSource{
         print("table view called")
         let corks = self.corks![indexPath.row]
         
-        let fish_ID = corks.name
-        let fish_weight = corks.mAC
-        let caught_date = corks.used
+        let cork_ID = corks.name
+        let cork_MAC = corks.mAC
+        let cork_in_use = corks.used
         
-        //https://www.brianadvent.com/build-simple-core-data-driven-ios-app/
+        //www.brianadvent.com/build-simple-core-data-driven-ios-app/
         
-        cell.textLabel?.text = fish_ID! + " | " + "\(String(describing: fish_weight))"
+        cell.textLabel?.text = cork_ID! + " | " + "\(cork_MAC ?? "??")"
         print("helo.......)")
         return cell
     }
@@ -97,9 +97,9 @@ extension CorkViewController: UITableViewDelegate, UITableViewDataSource{
         let action = UIContextualAction(style: .destructive, title: "Delete") { (action, view, completionHandler) in
             
             //Which fish to remove
-            let fishToRemove = self.items![indexPath.row]
+            let corkToRemove = self.corks![indexPath.row]
             
-            self.context.delete(fishToRemove)
+            self.context.delete(corkToRemove)
             
             do {
                 try self.context.save()
