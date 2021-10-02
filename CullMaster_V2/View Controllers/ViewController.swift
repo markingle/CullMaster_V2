@@ -4,18 +4,20 @@
 //
 //  Created by Mark Brady Ingle on 9/16/21.
 //
+//www.splinter.com.au/2019/05/18/ios-swift-bluetooth-le/
 
 import UIKit
 import CoreData
 import CoreBluetooth
+
 // MARK: - Core Bluetooth service IDs
 let Weight_Scale_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c331914b")
 
 let Cork1_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c331914c")
-//let Cork2_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c331914d")
-//let Cork3_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c331914e")
-//let Cork4_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c331914f")
-//let Cork5_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c3319141")
+let Cork2_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c331914d")
+let Cork3_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c331914e")
+let Cork4_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c331914f")
+let Cork5_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c3319141")
 
 // MARK: - Core Bluetooth characteristic IDs
 let Weight_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F5-EA07361B26A6")
@@ -31,6 +33,10 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
     var centralManager: CBCentralManager?
     var WeightScale: CBPeripheral?
     var Cork1: CBPeripheral?
+    var Cork2: CBPeripheral?
+    var Cork3: CBPeripheral?
+    var Cork4: CBPeripheral?
+    var Cork5: CBPeripheral?
     
     @IBOutlet weak var weightDataLabel: UITextField!
     @IBOutlet weak var totalWeightLabel: UITextField!
@@ -53,6 +59,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
     //Get array of data that provides the Data View
     var items:[Fish_Table]?
     var corks:[Cork_Table]?
+
     
     //MARK: - VIEWDIDLOAD
     
@@ -114,8 +121,8 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                 //centralManager?.scanForPeripherals(withServices: [Cork1_Service_CBUUID, Weight_Scale_Service_CBUUID], options: [CBCentralManagerScanOptionSolicitedServiceUUIDsKey: true])
                 //print("Central Manager Looking!!")
 
-                centralManager?.scanForPeripherals(withServices: [Weight_Scale_Service_CBUUID,Cork1_Service_CBUUID])
-                //print("Central Manager Looking!!")
+                centralManager?.scanForPeripherals(withServices: [Weight_Scale_Service_CBUUID,Cork1_Service_CBUUID,Cork2_Service_CBUUID,Cork3_Service_CBUUID, Cork4_Service_CBUUID,Cork5_Service_CBUUID])
+                print("Central Manager Looking!!")
             default: break
             } // END switch
             
@@ -123,29 +130,137 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
     
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
        _ = FriendlyAdvData(rawAdvData: advertisementData, rssi: RSSI, friendlyName: peripheral.name)
+        //Use a flag for now
+        //TODO: Build setup for storing cull corks in a table
+        
+        let reset_corks = 0
+        
+//>>>>>>>>>>>>>>>>>>>>>>>>> CORK 1 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
         
         if peripheral.name == "CORK1"{
             print("Found the peripheral called CORK1")
-            print("\(String(describing: peripheral.name))")
-            let name = peripheral.name
-            let newCork = Cork_Table(context: self.context)
-            newCork.name = name
-            newCork.mAC = "11-22-33-44-55-66"
-            newCork.used = 1
-                        
-            do {
-                try self.context.save()
+            if reset_corks == 1 {
+                let name = peripheral.name
+                let newCork = Cork_Table(context: self.context)
+                newCork.name = name
+                newCork.mAC = "11-11-11-11-11-11"
+                newCork.used = 1
+                do {
+                    try self.context.save()
+                    }
+                catch {
                 }
-            catch {
             }
+            
             decodePeripheralState(peripheralState: peripheral.state)
             Cork1 = peripheral
             Cork1?.delegate = self
             centralManager?.connect(Cork1!)
             decodePeripheralState(peripheralState: peripheral.state)
         }
+        
+//>>>>>>>>>>>>>>>>>>>>>>>>> CORK 2 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+        
+        if peripheral.name == "CORK2"{
+            print("Found the peripheral called CORK2")
+            if reset_corks == 1 {
+                let name = peripheral.name
+                let newCork = Cork_Table(context: self.context)
+                newCork.name = name
+                newCork.mAC = "22-22-22-22-22-22"
+                newCork.used = 1
+                do {
+                    try self.context.save()
+                    }
+                catch {
+                }
+            }
+            
+            decodePeripheralState(peripheralState: peripheral.state)
+            Cork2 = peripheral
+            Cork2?.delegate = self
+            centralManager?.connect(Cork2!)
+            decodePeripheralState(peripheralState: peripheral.state)
+        }
+
+//>>>>>>>>>>>>>>>>>>>>>>>>> CORK 3 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+       
+        if peripheral.name == "CORK3"{
+            print("Found the peripheral called CORK3")
+            if reset_corks == 1 {
+                let name = peripheral.name
+                let newCork = Cork_Table(context: self.context)
+                newCork.name = name
+                newCork.mAC = "33-33-33-33-33-33"
+                newCork.used = 1
+                do {
+                    try self.context.save()
+                    }
+                catch {
+                }
+            }
+            
+            decodePeripheralState(peripheralState: peripheral.state)
+            Cork3 = peripheral
+            Cork3?.delegate = self
+            centralManager?.connect(Cork3!)
+            decodePeripheralState(peripheralState: peripheral.state)
+        }
+
+//>>>>>>>>>>>>>>>>>>>>>>>>> CORK 4 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+               
+                if peripheral.name == "CORK4"{
+                    print("Found the peripheral called CORK4")
+                    if reset_corks == 1 {
+                        let name = peripheral.name
+                        let newCork = Cork_Table(context: self.context)
+                        newCork.name = name
+                        newCork.mAC = "44-44-44-44-44-44"
+                        newCork.used = 1
+                        do {
+                            try self.context.save()
+                            }
+                        catch {
+                        }
+                    }
+                    
+                    decodePeripheralState(peripheralState: peripheral.state)
+                    Cork4 = peripheral
+                    Cork4?.delegate = self
+                    centralManager?.connect(Cork4!)
+                    decodePeripheralState(peripheralState: peripheral.state)
+                }
+        
+        
+//>>>>>>>>>>>>>>>>>>>>>>>>> CORK 5 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+                       
+                        if peripheral.name == "CORK5"{
+                            print("Found the peripheral called CORK5")
+                            if reset_corks == 1 {
+                                let name = peripheral.name
+                                let newCork = Cork_Table(context: self.context)
+                                newCork.name = name
+                                newCork.mAC = "55-55-55-55-55-55"
+                                newCork.used = 1
+                                do {
+                                    try self.context.save()
+                                    }
+                                catch {
+                                }
+                            }
+                            
+                            decodePeripheralState(peripheralState: peripheral.state)
+                            Cork5 = peripheral
+                            Cork5?.delegate = self
+                            centralManager?.connect(Cork5!)
+                            decodePeripheralState(peripheralState: peripheral.state)
+                        }
+
+//>>>>>>>>>>>>>>>>>>>>>>>>> WSCALE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+       
         if peripheral.name == "WSALE"{
             print("Found the peripheral called WSALE")
+            
             decodePeripheralState(peripheralState: peripheral.state)
             WeightScale = peripheral
             WeightScale?.delegate = self
@@ -174,6 +289,9 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         
+       print("Stopping Scan for Peripherals")
+       centralManager?.stopScan()
+        
         DispatchQueue.main.async { () -> Void in
             
             self.connectionActivityStatus.backgroundColor = UIColor.green
@@ -182,12 +300,40 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         
         // STEP 8: look for services of interest on peripheral
         print("Did Connect....Looking for Scale Service")
-        WeightScale?.discoverServices([Weight_Scale_Service_CBUUID])
-        print("Did Connect....Looking for Cork Service")
-        Cork1?.discoverServices([Cork1_Service_CBUUID])
-        print("Stopping Scan for Peripherals")
-        centralManager?.stopScan()
-
+        decodePeripheralState(peripheralState: peripheral.state)
+        if peripheral == WeightScale {
+            WeightScale?.discoverServices([Weight_Scale_Service_CBUUID])
+        }
+        
+        print("Did Connect....Looking for Cork1 Service")
+        decodePeripheralState(peripheralState: peripheral.state)
+        if peripheral == Cork1 {
+            Cork1?.discoverServices([Cork1_Service_CBUUID])
+        }
+        
+        print("Did Connect....Looking for Cork2 Service")
+        decodePeripheralState(peripheralState: peripheral.state)
+        if peripheral == Cork2 {
+            Cork2?.discoverServices([Cork2_Service_CBUUID])
+        }
+        
+        print("Did Connect....Looking for Cork3 Service")
+        decodePeripheralState(peripheralState: peripheral.state)
+        if peripheral == Cork3 { Cork3?.discoverServices([Cork3_Service_CBUUID])
+        }
+        
+        print("Did Connect....Looking for Cork4 Service")
+        decodePeripheralState(peripheralState: peripheral.state)
+        if peripheral == Cork4 {
+            Cork4?.discoverServices([Cork4_Service_CBUUID])
+        }
+        
+        print("Did Connect....Looking for Cork5 Service")
+        decodePeripheralState(peripheralState: peripheral.state)
+        if peripheral == Cork5 {
+            Cork5?.discoverServices([Cork5_Service_CBUUID])
+        }
+        
     } // END func centralManager(... didConnect peripheral
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
@@ -213,13 +359,52 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             peripheral.discoverCharacteristics(nil, for: service)
             
         }
+        
+        if service.uuid == Cork2_Service_CBUUID {
+            
+            print("Service: \(service)")
+            
+            // STEP 9: look for characteristics of interest
+            // within services of interest
+            peripheral.discoverCharacteristics(nil, for: service)
+            
+        }
+        
+        if service.uuid == Cork3_Service_CBUUID {
+            
+            print("Service: \(service)")
+            
+            // STEP 9: look for characteristics of interest
+            // within services of interest
+            peripheral.discoverCharacteristics(nil, for: service)
+            
+        }
+        if service.uuid == Cork4_Service_CBUUID {
+            
+            print("Service: \(service)")
+            
+            // STEP 9: look for characteristics of interest
+            // within services of interest
+            peripheral.discoverCharacteristics(nil, for: service)
+            
+        }
+        if service.uuid == Cork5_Service_CBUUID {
+            
+            print("Service: \(service)")
+            
+            // STEP 9: look for characteristics of interest
+            // within services of interest
+            peripheral.discoverCharacteristics(nil, for: service)
+            
+        }
+        
         }
     }
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         connectionActivityStatus.backgroundColor = UIColor.black
         connectionActivityStatus.startAnimating()
-        centralManager?.scanForPeripherals(withServices: [Cork1_Service_CBUUID, Weight_Scale_Service_CBUUID], options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
+        centralManager?.scanForPeripherals(withServices: [Weight_Scale_Service_CBUUID,Cork1_Service_CBUUID,Cork2_Service_CBUUID,Cork3_Service_CBUUID, Cork4_Service_CBUUID,Cork5_Service_CBUUID])
         print("Peripheral disconnect.....Central Manager Looking!!")
     }
     
@@ -388,7 +573,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         //let submitButton = UIAlertAction(title: "Add", style: .default) { (action ) in
             
             
-            //https://stackoverflow.com/questions/31922349/how-to-add-textfield-to-uialertcontroller-in-swift
+            //stackoverflow.com/questions/31922349/how-to-add-textfield-to-uialertcontroller-in-swift
             
             let newFish = Fish_Table(context: self.context)
             newFish.fish_ID = "Green"
@@ -425,6 +610,18 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             return
         }
                 present(vc, animated: true)
+    }
+    
+    @IBAction func configCullCorks(){
+        let alert = UIAlertController(title: "Cork Setup", message: "Are you sure you want to setup new corks?" , preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        
+        alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { action in
+                print("Run Cork Setup")
+        }))
+        
+        self.present(alert, animated: true)
     }
     
     func writeonStateValueToChar( withCharacteristic characteristic: CBCharacteristic, withValue value: Data) {

@@ -28,17 +28,6 @@ class CorkViewController: UIViewController {
         
     }
 
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
     func showCorks() {
         //Fetch fish from the Core Data to display in table view
         // This fetch is pulling all data...review the video for pull data in sort order fro the final app
