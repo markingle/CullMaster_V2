@@ -133,7 +133,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         //Use a flag for now
         //TODO: Build setup for storing cull corks in a table
         
-        let reset_corks = 0
+        let reset_corks = 1
         
 //>>>>>>>>>>>>>>>>>>>>>>>>> CORK 1 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
         
@@ -144,7 +144,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                 let newCork = Cork_Table(context: self.context)
                 newCork.name = name
                 newCork.mAC = "11-11-11-11-11-11"
-                newCork.used = 1
+                newCork.used = 0
                 do {
                     try self.context.save()
                     }
@@ -168,7 +168,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                 let newCork = Cork_Table(context: self.context)
                 newCork.name = name
                 newCork.mAC = "22-22-22-22-22-22"
-                newCork.used = 1
+                newCork.used = 0
                 do {
                     try self.context.save()
                     }
@@ -192,7 +192,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                 let newCork = Cork_Table(context: self.context)
                 newCork.name = name
                 newCork.mAC = "33-33-33-33-33-33"
-                newCork.used = 1
+                newCork.used = 0
                 do {
                     try self.context.save()
                     }
@@ -216,7 +216,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                         let newCork = Cork_Table(context: self.context)
                         newCork.name = name
                         newCork.mAC = "44-44-44-44-44-44"
-                        newCork.used = 1
+                        newCork.used = 0
                         do {
                             try self.context.save()
                             }
@@ -241,7 +241,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                                 let newCork = Cork_Table(context: self.context)
                                 newCork.name = name
                                 newCork.mAC = "55-55-55-55-55-55"
-                                newCork.used = 1
+                                newCork.used = 0
                                 do {
                                     try self.context.save()
                                     }
@@ -289,8 +289,8 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         
-       print("Stopping Scan for Peripherals")
-       centralManager?.stopScan()
+       //print("Stopping Scan for Peripherals")
+       //centralManager?.stopScan()
         
         DispatchQueue.main.async { () -> Void in
             
@@ -299,38 +299,44 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         }
         
         // STEP 8: look for services of interest on peripheral
-        print("Did Connect....Looking for Scale Service")
+        
         decodePeripheralState(peripheralState: peripheral.state)
         if peripheral == WeightScale {
+            print("Did Connect....Looking for Scale Service")
             WeightScale?.discoverServices([Weight_Scale_Service_CBUUID])
         }
         
-        print("Did Connect....Looking for Cork1 Service")
         decodePeripheralState(peripheralState: peripheral.state)
         if peripheral == Cork1 {
+            print("Did Connect....Looking for Cork1 Service")
             Cork1?.discoverServices([Cork1_Service_CBUUID])
         }
         
-        print("Did Connect....Looking for Cork2 Service")
+        
         decodePeripheralState(peripheralState: peripheral.state)
         if peripheral == Cork2 {
+            print("Did Connect....Looking for Cork2 Service")
             Cork2?.discoverServices([Cork2_Service_CBUUID])
         }
         
-        print("Did Connect....Looking for Cork3 Service")
+        
         decodePeripheralState(peripheralState: peripheral.state)
-        if peripheral == Cork3 { Cork3?.discoverServices([Cork3_Service_CBUUID])
+        if peripheral == Cork3 {
+            print("Did Connect....Looking for Cork3 Service")
+            Cork3?.discoverServices([Cork3_Service_CBUUID])
         }
         
-        print("Did Connect....Looking for Cork4 Service")
+        
         decodePeripheralState(peripheralState: peripheral.state)
         if peripheral == Cork4 {
+            print("Did Connect....Looking for Cork4 Service")
             Cork4?.discoverServices([Cork4_Service_CBUUID])
         }
         
-        print("Did Connect....Looking for Cork5 Service")
+        
         decodePeripheralState(peripheralState: peripheral.state)
         if peripheral == Cork5 {
+            print("Did Connect....Looking for Cork5 Service")
             Cork5?.discoverServices([Cork5_Service_CBUUID])
         }
         
@@ -559,8 +565,8 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                 let result = try context.fetch(fetchRequest) as! [NSDictionary]
                 
                 let resultDic = result.first!
-                let numDeals = resultDic["minweight"]!
-                    print("Min Weight : \(numDeals)")
+                let minweight = resultDic["minweight"]!
+                    print("Min Weight : \(minweight)")
             } catch {
                 print("fetch failed")
             }
@@ -572,24 +578,61 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         
         //let submitButton = UIAlertAction(title: "Add", style: .default) { (action ) in
             
+        //stackoverflow.com/questions/31922349/how-to-add-textfield-to-uialertcontroller-in-swift
+        
+        var selectedCork = "Temp"
+        
+        do {
+            let request = Cork_Table.fetchRequest() as NSFetchRequest<Cork_Table>
+            let pred = NSPredicate(format: "used = %i", 0)
+            request.predicate = pred
+            request.fetchLimit = 1
+    
+            let results = try context.fetch(request)
             
-            //stackoverflow.com/questions/31922349/how-to-add-textfield-to-uialertcontroller-in-swift
-            
-            let newFish = Fish_Table(context: self.context)
-            newFish.fish_ID = "Green"
-            
-        let number: NSDecimalNumber = NSDecimalNumber(string: self.weightDataLabel.text ?? "111" )
+            if results.count != 0 {
+                for data in results as [NSManagedObject] {
+                    if results.count == 0 {
+                        self.showsmallest()
+                        break
+                    }
+                    
+                    print(data.value(forKey: "name") as! String)
+                    selectedCork = data.value(forKey: "name") as! String
+                    
+                    results.first?.used = 1
+                    do{
+                        try self.context.save()
+                    } catch {
+                        print("Save Failed.........")
+                    }
+                    let newFish = Fish_Table(context: self.context)
+                    newFish.fish_ID = selectedCork
+                        
+                    let number: NSDecimalNumber = NSDecimalNumber(string: self.weightDataLabel.text ?? "111" )
                     newFish.weight = number
                     newFish.date = Date()
-                    
+                                
                     do {
                         try self.context.save()
-                    }
-                    catch {
-                        
+                    }catch {
+                                    
                     }
                     self.fetchFish()
+                    
+                }
+            } else {
                     self.showsmallest()
+            }
+            //DispatchQueue.main.async {
+            //    self.tableView.reloadData()
+            //}
+            
+        } catch {
+            print("Cork Sort for unused failed")
+        }
+            
+        
     //}
         
         //alert.addAction(submitButton)
