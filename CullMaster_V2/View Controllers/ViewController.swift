@@ -562,15 +562,52 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             fetchRequest.propertiesToFetch = [expressionDescription]
             
             do {
-                let result = try context.fetch(fetchRequest) as! [NSDictionary]
+                let results = try context.fetch(fetchRequest) as! [NSDictionary]
                 
-                let resultDic = result.first!
+                let resultDic = results.first!
                 let minweight = resultDic["minweight"]!
                     print("Min Weight : \(minweight)")
-            } catch {
-                print("fetch failed")
+                let alert = UIAlertController(title: "Cull Results", message: "", preferredStyle: .alert)
+
+                //Step : 2
+                alert.addAction (UIAlertAction(title: "Cull Fish", style: .default) { (alertAction) in
+                let textField = alert.textFields![0]
+                let textField2 = alert.textFields![1]
+                if textField.text != "" {
+                    //Read textfield data
+                    print(textField.text!)
+                    print("TF 1 : \(textField.text!)")
+                } else {
+                    print("TF 1 is Empty...")
+                }
+                if textField2.text != "" {
+                    //Read textfield data
+                    print(textField2.text!)
+                    print("TF 2 : \(textField2.text!)")
+                } else {
+                    print("TF 2 is Empty...")
+                }
+            })
+
+            //Step : 3
+            //For first TF
+            alert.addTextField { (textField) in
+                textField.placeholder = "\(minweight)"
+                textField.textColor = .red
             }
-        }
+            //For second TF
+            alert.addTextField { (textField) in
+                textField.placeholder = "Enter your last name"
+                textField.textColor = .blue
+            }
+
+            //Cancel action
+            alert.addAction(UIAlertAction(title: "Cancel", style: .default) { (alertAction) in })
+                   self.present(alert, animated:true, completion: nil)
+        } catch {
+        print("fetch failed")
+    }
+}
 
     @IBAction func captureWeight(_ sender: Any) {
         //let alert = UIAlertController(title: "Add weight", message: nil, preferredStyle: .alert)
