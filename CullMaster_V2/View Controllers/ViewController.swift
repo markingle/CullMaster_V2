@@ -567,7 +567,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                 let resultDic = results.first!
                 let minweight = resultDic["minweight"]!
                     print("Min Weight : \(minweight)")
-                let alert = UIAlertController(title: "Cull Results", message: "", preferredStyle: .alert)
+                let alert = UIAlertController(title: "Cull Results \(minweight)", message: "", preferredStyle: .alert)
 
                 //Step : 2
                 alert.addAction (UIAlertAction(title: "Cull Fish", style: .default) { (alertAction) in
@@ -592,7 +592,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             //Step : 3
             //For first TF
             alert.addTextField { (textField) in
-                textField.placeholder = "\(minweight)"
+                textField.text = "\(minweight)"
                 textField.textColor = .red
             }
             //For second TF
