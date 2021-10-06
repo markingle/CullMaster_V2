@@ -539,7 +539,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             }
     }
     
-    func showsmallest() {
+    func showsmallest(assign_capturedWeight: NSDecimalNumber) {
             
             //1
             let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
@@ -557,9 +557,9 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             expressionDescription.name = key
             expressionDescription.expression = maxExpression
             expressionDescription.expressionResultType = .decimalAttributeType
-            
+       
             //4
-            fetchRequest.propertiesToFetch = [expressionDescription]
+            fetchRequest.propertiesToFetch = [expressionDescription,"fish_ID"]
             
             do {
                 let results = try context.fetch(fetchRequest) as! [NSDictionary]
@@ -567,39 +567,28 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                 let resultDic = results.first!
                 let minweight = resultDic["minweight"]!
                     print("Min Weight : \(minweight)")
-                let alert = UIAlertController(title: "Cull Results", message: "", preferredStyle: .alert)
+                let Cork = resultDic["fish_ID"]  ?? "---"
+                let alert = UIAlertController(title: "Cull \(Cork) @ \(minweight)", message: "", preferredStyle: .alert)
 
                 //Step : 2
                 alert.addAction (UIAlertAction(title: "Cull Fish", style: .default) { (alertAction) in
-                let textField = alert.textFields![0]
-                let textField2 = alert.textFields![1]
-                if textField.text != "" {
-                    //Read textfield data
-                    print(textField.text!)
-                    print("TF 1 : \(textField.text!)")
-                } else {
-                    print("TF 1 is Empty...")
-                }
-                if textField2.text != "" {
-                    //Read textfield data
-                    print(textField2.text!)
-                    print("TF 2 : \(textField2.text!)")
-                } else {
-                    print("TF 2 is Empty...")
-                }
-            })
+                    
+                    //TODO: WRITE RECORD TO HISTORY TABLE INSTEAD OF DELETE
+                    
+                    let newFish = Fish_Table(context: self.context)
+                    newFish.fish_ID = resultDic["fish_ID"] as? String
+                    newFish.weight = assign_capturedWeight
+                    newFish.date = Date()
+                            
+                    do {
+                        try self.context.save()
+                    }catch {
+                                    
+                    }
+                    self.fetchFish()
+                    
+                })
 
-            //Step : 3
-            //For first TF
-            alert.addTextField { (textField) in
-                textField.placeholder = "\(minweight)"
-                textField.textColor = .red
-            }
-            //For second TF
-            alert.addTextField { (textField) in
-                textField.placeholder = "Enter your last name"
-                textField.textColor = .blue
-            }
 
             //Cancel action
             alert.addAction(UIAlertAction(title: "Cancel", style: .default) { (alertAction) in })
@@ -617,7 +606,11 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             
         //stackoverflow.com/questions/31922349/how-to-add-textfield-to-uialertcontroller-in-swift
         
-        var selectedCork = "Temp"
+        //var selectedCork = "Temp"
+        
+        let capturedWeight = NSDecimalNumber(string: self.weightDataLabel.text!)
+        
+        print("test \(String(describing: capturedWeight))")
         
         do {
             let request = Cork_Table.fetchRequest() as NSFetchRequest<Cork_Table>
@@ -629,25 +622,20 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             
             if results.count != 0 {
                 for data in results as [NSManagedObject] {
-                    if results.count == 0 {
-                        self.showsmallest()
-                        break
-                    }
                     
                     print(data.value(forKey: "name") as! String)
-                    selectedCork = data.value(forKey: "name") as! String
+                    //selectedCork = data.value(forKey: "name") as! String
                     
                     results.first?.used = 1
+                    
                     do{
                         try self.context.save()
                     } catch {
                         print("Save Failed.........")
                     }
                     let newFish = Fish_Table(context: self.context)
-                    newFish.fish_ID = selectedCork
-                        
-                    let number: NSDecimalNumber = NSDecimalNumber(string: self.weightDataLabel.text ?? "111" )
-                    newFish.weight = number
+                    newFish.fish_ID = results.first!.name
+                    newFish.weight = capturedWeight
                     newFish.date = Date()
                                 
                     do {
@@ -659,8 +647,8 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                     
                 }
             } else {
-                    self.showsmallest()
-            }
+                    self.showsmallest(assign_capturedWeight: capturedWeight)
+                }
             //DispatchQueue.main.async {
             //    self.tableView.reloadData()
             //}
