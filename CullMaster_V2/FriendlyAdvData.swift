@@ -104,7 +104,7 @@ public struct FriendlyAdvData: CustomStringConvertible{
     
     func getHexString(unFormattedData: NSData) -> String{
         
-        var data: Data? = unFormattedData as Data?
+        let data: Data? = unFormattedData as Data?
         
         var dataBytes = [UInt8](repeating: 0, count: data!.count)
         (data! as NSData).getBytes(&dataBytes, length: data!.count)
