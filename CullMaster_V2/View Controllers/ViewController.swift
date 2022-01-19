@@ -208,7 +208,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         }
 
 //>>>>>>>>>>>>>>>>>>>>>>>>> CORK 4 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-               
+/*
                 if peripheral.name == "CORK4"{
                     print("Found the peripheral called CORK4")
                     if reset_corks == 1 {
@@ -255,7 +255,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                             centralManager?.connect(Cork5!)
                             decodePeripheralState(peripheralState: peripheral.state)
                         }
-
+*/
 //>>>>>>>>>>>>>>>>>>>>>>>>> WSCALE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
        
         if peripheral.name == "WSALE"{
@@ -418,7 +418,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         
         for characteristic in service.characteristics! {
             
-            print("Characteristic: \(characteristic)")
+            //print("Characteristic: \(characteristic)")
             
             if characteristic.uuid == Weight_Characteristic_CBUUID{
                 print("Weight Data")
@@ -489,7 +489,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             let request = Fish_Table.fetchRequest() as NSFetchRequest<Fish_Table>
             let sort = NSSortDescriptor(key: "weight", ascending: false)
             request.sortDescriptors = [sort]
-            request.fetchLimit = 5
+            request.fetchLimit = 3         //CHANGE THIS BACK TO 5 WHEN YOU GET MORE TinyPICO
             self.items = try context.fetch(request)
             DispatchQueue.main.async {
                 self.tableView.reloadData()
@@ -539,9 +539,28 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             }
     }
     
+    func deleteMinWeight(min_cork: String){
+        print("Cork to cull :\(min_cork)")
+        
+        do {
+        // Cast the result returned from the fetchRequest as Person class
+        let minfetchRequest = Fish_Table.fetchRequest() as NSFetchRequest<Fish_Table>
+
+        // Sort using these properties, can put in mulitple sort descriptor here
+        let minsort = NSSortDescriptor(key: "weight", ascending: true)
+        minfetchRequest.sortDescriptors = [minsort]
+        self.items = try context.fetch(minfetchRequest)
+        let minitem = self.items?.first!
+        //let minweight = (minitem?.weight)!
+        context.delete(minitem!)
+    } catch {
+        print("min sort fetch failed")
+        }
+    }
+    
     func showsmallest(assign_capturedWeight: NSDecimalNumber) {
             
-            //1
+            /*//1
             let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
             fetchRequest.entity = NSEntityDescription.entity(forEntityName: "Fish_Table", in: context)
             fetchRequest.resultType = NSFetchRequestResultType.dictionaryResultType
@@ -560,13 +579,46 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
        
             //4
             fetchRequest.propertiesToFetch = [expressionDescription,"fish_ID"]
-            
+            */
+        
             do {
-                let results = try context.fetch(fetchRequest) as! [NSDictionary]
+                let request = Fish_Table.fetchRequest() as NSFetchRequest<Fish_Table>
+                let sort = NSSortDescriptor(key: "weight", ascending: true)
+                request.sortDescriptors = [sort]
+                //request.fetchLimit = 3         //CHANGE THIS BACK TO 5 WHEN YOU GET MORE TinyPICO
+                self.items = try context.fetch(request)
+                let minitem = self.items?.first!
+                let minweight = minitem?.weight
+                print("Min Weight : \(String(describing: minweight))")
+                let Cork = minitem?.fish_ID  ?? "---"
+                let alert = UIAlertController(title: "Cull \(Cork) @ \(String(describing: minweight))", message: "", preferredStyle: .alert)
+                //Step : 2
+                alert.addAction (UIAlertAction(title: "Cull Fish", style: .default) { (alertAction) in
+                    
+                    //TODO: WRITE RECORD TO HISTORY TABLE BEFORE OF DELETE
+                    
+                    self.deleteMinWeight(min_cork: Cork)
+                    
+                    let newFish = Fish_Table(context: self.context)
+                    newFish.fish_ID = minitem?.fish_ID
+                    newFish.weight = assign_capturedWeight
+                    newFish.date = Date()
+                            
+                    do {
+                        try self.context.save()
+                    }catch {
+                                    
+                    }
+                    self.fetchFish()
+                    
+                })
+            
+            /*do {
+                //let results = try context.fetch(fetchRequest) as! [NSMutableDictionary]
                 
                 let resultDic = results.first!
                 let minweight = resultDic["minweight"]!
-                    print("Min Weight : \(minweight)")
+                print("Min Weight : \(minweight)")
                 let Cork = resultDic["fish_ID"]  ?? "---"
                 let alert = UIAlertController(title: "Cull \(Cork) @ \(minweight)", message: "", preferredStyle: .alert)
 
@@ -574,6 +626,13 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                 alert.addAction (UIAlertAction(title: "Cull Fish", style: .default) { (alertAction) in
                     
                     //TODO: WRITE RECORD TO HISTORY TABLE INSTEAD OF DELETE
+                    
+                    //let oldFish = Fish_Table(context: self.context)
+                    //oldFish.fish_ID = resultDic["fish_ID"] as? String
+                    
+                    //self.context.delete(oldFish)
+                    
+                    NSLog("dictionary = %@", results)
                     
                     let newFish = Fish_Table(context: self.context)
                     newFish.fish_ID = resultDic["fish_ID"] as? String
@@ -587,7 +646,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                     }
                     self.fetchFish()
                     
-                })
+                })*/
 
 
             //Cancel action
