@@ -20,8 +20,18 @@ let Cork4_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c331914f"
 let Cork5_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c3319141")
 
 // MARK: - Core Bluetooth characteristic IDs
+//WEIGHT SCALE CHARACTERISTICS
 let Weight_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F5-EA07361B26A6")
 let Tare_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F6-EA07361B26B7")
+
+//CORK CHARACTERISTICS PREFERRED (One characteristic for all corks.  There are three corks - 1 to 3....Why cant I do this!!!)
+let Fish_Weight_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F5-EA07361B26C8")
+let Battery_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F5-EA07361B26D9")
+
+//CORK CHARACTERISTICS WORKING (One characteristic for each cork...1 - 1  This doesnt seem right!!!!  :(  )
+let Cork1_FlashRGB_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F6-EA07361B2611")
+let Cork2_FlashRGB_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F6-EA07361B2612")
+let Cork3_FlashRGB_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F6-EA07361B2613")
 
 class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDelegate {
     // MARK: - Core Bluetooth class member variables
@@ -51,6 +61,9 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
     // Characteristics
     private var WeightData: CBCharacteristic?
     private var TareFlag: CBCharacteristic?
+    private var Cork1_FlashRGBFlag: CBCharacteristic?
+    private var Cork2_FlashRGBFlag: CBCharacteristic?
+    private var Cork3_FlashRGBFlag: CBCharacteristic?
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -136,7 +149,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         let reset_corks = 1
         
 //>>>>>>>>>>>>>>>>>>>>>>>>> CORK 1 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-        
+    
         if peripheral.name == "CORK1"{
             print("Found the peripheral called CORK1")
             if reset_corks == 1 {
@@ -158,9 +171,9 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             centralManager?.connect(Cork1!)
             decodePeripheralState(peripheralState: peripheral.state)
         }
-        
+    
 //>>>>>>>>>>>>>>>>>>>>>>>>> CORK 2 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-        
+
         if peripheral.name == "CORK2"{
             print("Found the peripheral called CORK2")
             if reset_corks == 1 {
@@ -184,7 +197,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         }
 
 //>>>>>>>>>>>>>>>>>>>>>>>>> CORK 3 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-       
+
         if peripheral.name == "CORK3"{
             print("Found the peripheral called CORK3")
             if reset_corks == 1 {
@@ -267,25 +280,8 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             centralManager?.connect(WeightScale!)
             decodePeripheralState(peripheralState: peripheral.state)
         }
-        /*print("Peripheral Found ",peripheral.name!)
-        decodePeripheralState(peripheralState: peripheral.state)
-        WeightScale = peripheral
-        WeightScale?.delegate = self*/
         
-        // Cork1 = peripheral
-        // Cork1?.delegate = self
-        
-        // STEP 5: stop scanning to preserve battery life;
-        // re-scan if disconnected
-        //centralManager?.stopScan()
-        //print("Stopped Scanning")
-        
-        // STEP 6: connect to the discovered peripheral of interest
-        //centralManager?.connect(WeightScale!)
-        
-        
-        
-    } // END func centralManager(... didDiscover peripheral
+} // END func centralManager(... didDiscover peripheral
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         
@@ -385,6 +381,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             peripheral.discoverCharacteristics(nil, for: service)
             
         }
+        
         if service.uuid == Cork4_Service_CBUUID {
             
             print("Service: \(service)")
@@ -416,9 +413,12 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         
+        
+        print("Service didDiscoverChar: \(service)")
+        
         for characteristic in service.characteristics! {
             
-            //print("Characteristic: \(characteristic)")
+            print("Characteristic: \(characteristic)")
             
             if characteristic.uuid == Weight_Characteristic_CBUUID{
                 print("Weight Data")
@@ -426,10 +426,25 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                 peripheral.setNotifyValue(true, for: characteristic)
                 peripheral.readValue(for: characteristic)
             }
+            
             if characteristic.uuid == Tare_Characteristic_CBUUID{
                 print("Tare Flag")
-                TareFlag = characteristic
-                
+                self.TareFlag = characteristic
+            }
+            
+            if characteristic.uuid == Cork1_FlashRGB_Characteristic_CBUUID{
+                print("Flash RBG Flag")
+                self.Cork1_FlashRGBFlag = characteristic
+            }
+            
+            if characteristic.uuid == Cork2_FlashRGB_Characteristic_CBUUID{
+                print("Flash RBG Flag")
+                self.Cork2_FlashRGBFlag = characteristic
+            }
+            
+            if characteristic.uuid == Cork3_FlashRGB_Characteristic_CBUUID{
+                print("Flash RBG Flag")
+                self.Cork3_FlashRGBFlag = characteristic
             }
         }
     } // END func peripheral(... didDiscoverCharacteristicsFor service
@@ -438,7 +453,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         
-        print(characteristic)
+        //print(characteristic)
         
         if characteristic.uuid == Weight_Characteristic_CBUUID {
             
@@ -591,8 +606,8 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                 let minweight = minitem?.weight
                 print("Min Weight : \(String(describing: minweight))")
                 let Cork = minitem?.fish_ID  ?? "---"
-                let alert = UIAlertController(title: "Cull \(Cork) @ \(String(describing: minweight))", message: "", preferredStyle: .alert)
-                //Step : 2
+                let alert = UIAlertController(title: "Cull \(Cork) @ \(minweight ?? 000)", message: "", preferredStyle: .alert)
+                sendFlashRGB(cork_to_flag: Cork, flag: "1") // <-- Start flashing the RGB on the Cork
                 alert.addAction (UIAlertAction(title: "Cull Fish", style: .default) { (alertAction) in
                     
                     //TODO: WRITE RECORD TO HISTORY TABLE BEFORE OF DELETE
@@ -610,6 +625,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                                     
                     }
                     self.fetchFish()
+                    self.sendFlashRGB(cork_to_flag: Cork, flag: "0")  // <-- Stop flashing the RGB on the Cork
                     
                 })
             
@@ -755,6 +771,37 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         if characteristic.properties.contains(.writeWithoutResponse) && WeightScale != nil {
             WeightScale?.writeValue(value, for: characteristic, type:.withoutResponse)
         }
+    }
+    
+    func sendFlashRGB(cork_to_flag: String, flag: String) {
+        print("Sending Flash RGB")
+        
+        switch cork_to_flag {
+            
+        case "CORK1":
+            
+            let FlashState = flag
+            let data = Data(FlashState.utf8)
+            print("data = ", data)
+            Cork1?.writeValue(data, for: Cork1_FlashRGBFlag!, type: .withoutResponse)
+            
+        case "CORK2":
+            
+            let FlashState = flag
+            let data = Data(FlashState.utf8)
+            print("data = ", data)
+            Cork2?.writeValue(data, for: Cork2_FlashRGBFlag!, type: .withoutResponse)
+            
+        case "CORK3":
+            
+            let FlashState = flag
+            let data = Data(FlashState.utf8)
+            print("data = ", data)
+            Cork3?.writeValue(data, for: Cork3_FlashRGBFlag!, type: .withoutResponse)
+            
+        default:
+            print("NO CORK TO SEND.....")
+    }
     }
     
     @IBAction func sendTareRequest(_ sender: Any) {
