@@ -5,6 +5,8 @@
 //  Created by Mark Brady Ingle on 9/16/21.
 //
 //www.splinter.com.au/2019/05/18/ios-swift-bluetooth-le/
+//github.com/espressif/esp-idf/blob/master/examples/bluetooth/bluedroid/ble/gatt_security_server/tutorial/Gatt_Security_Server_Example_Walkthrough.md
+//www.youtube.com/watch?v=TwexLJwdLEw
 
 import UIKit
 import CoreData
@@ -487,6 +489,37 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         
     } // END func decodePeripheralState(peripheralState
     
+    func sendFlashRGB(cork_to_flag: String, flag: String) {
+        print("Sending Flash RGB")
+        
+        switch cork_to_flag {
+            
+        case "CORK1":
+            
+            let FlashState = flag
+            let data = Data(FlashState.utf8)
+            print("data = ", data)
+            Cork1?.writeValue(data, for: Cork1_FlashRGBFlag!, type: .withoutResponse)
+            
+        case "CORK2":
+            
+            let FlashState = flag
+            let data = Data(FlashState.utf8)
+            print("data = ", data)
+            Cork2?.writeValue(data, for: Cork2_FlashRGBFlag!, type: .withoutResponse)
+            
+        case "CORK3":
+            
+            let FlashState = flag
+            let data = Data(FlashState.utf8)
+            print("data = ", data)
+            Cork3?.writeValue(data, for: Cork3_FlashRGBFlag!, type: .withoutResponse)
+            
+        default:
+            print("NO CORK TO SEND.....")
+    }
+    }
+    
     
     func fetchFish() {
         //Fetch fish from the Core Data to display in table view
@@ -629,45 +662,11 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                     
                 })
             
-            /*do {
-                //let results = try context.fetch(fetchRequest) as! [NSMutableDictionary]
-                
-                let resultDic = results.first!
-                let minweight = resultDic["minweight"]!
-                print("Min Weight : \(minweight)")
-                let Cork = resultDic["fish_ID"]  ?? "---"
-                let alert = UIAlertController(title: "Cull \(Cork) @ \(minweight)", message: "", preferredStyle: .alert)
-
-                //Step : 2
-                alert.addAction (UIAlertAction(title: "Cull Fish", style: .default) { (alertAction) in
-                    
-                    //TODO: WRITE RECORD TO HISTORY TABLE INSTEAD OF DELETE
-                    
-                    //let oldFish = Fish_Table(context: self.context)
-                    //oldFish.fish_ID = resultDic["fish_ID"] as? String
-                    
-                    //self.context.delete(oldFish)
-                    
-                    NSLog("dictionary = %@", results)
-                    
-                    let newFish = Fish_Table(context: self.context)
-                    newFish.fish_ID = resultDic["fish_ID"] as? String
-                    newFish.weight = assign_capturedWeight
-                    newFish.date = Date()
-                            
-                    do {
-                        try self.context.save()
-                    }catch {
-                                    
-                    }
-                    self.fetchFish()
-                    
-                })*/
-
-
+            
             //Cancel action
             alert.addAction(UIAlertAction(title: "Cancel", style: .default) { (alertAction) in })
-                   self.present(alert, animated:true, completion: nil)
+            self.present(alert, animated:true, completion: nil)
+            //self.sendFlashRGB(cork_to_flag: Cork, flag: "0")  // <-- Stop flashing the RGB on the Cork
         } catch {
         print("fetch failed")
     }
@@ -703,11 +702,17 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                     
                     results.first?.used = 1
                     
-                    do{
-                        try self.context.save()
-                    } catch {
-                        print("Save Failed.........")
-                    }
+                    let Cork = results.first?.name
+                    self.sendFlashRGB(cork_to_flag: Cork ?? "---", flag: "1")  // <-- Start flashing the RGB on the Cork
+                    print("Init Cork \(String(describing: Cork))")
+                    let alertController = UIAlertController(title: "Weight Captured", message:"", preferredStyle: .alert)
+                    // add the actions (buttons)
+                    alertController.addAction (UIAlertAction(title: "Cork Attached?", style: .default) { (alertAction) in
+                    self.sendFlashRGB(cork_to_flag: Cork ?? "---", flag: "0")  // <-- Start flashing the RGB on the Cork
+                    })
+                    alertController.addAction(UIAlertAction(title: "Cancel", style: .default) { (alertAction) in })
+                    self.present(alertController, animated:true, completion: nil)
+                    
                     let newFish = Fish_Table(context: self.context)
                     newFish.fish_ID = results.first!.name
                     newFish.weight = capturedWeight
@@ -716,10 +721,10 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                     do {
                         try self.context.save()
                     }catch {
-                                    
+                        print("Save Failed.........")
                     }
                     self.fetchFish()
-                    
+                    //self.sendFlashRGB(cork_to_flag: "CORK1", flag: "0")  // <-- Stop flashing the RGB on the Cork
                 }
             } else {
                     self.showsmallest(assign_capturedWeight: capturedWeight)
@@ -773,36 +778,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         }
     }
     
-    func sendFlashRGB(cork_to_flag: String, flag: String) {
-        print("Sending Flash RGB")
-        
-        switch cork_to_flag {
-            
-        case "CORK1":
-            
-            let FlashState = flag
-            let data = Data(FlashState.utf8)
-            print("data = ", data)
-            Cork1?.writeValue(data, for: Cork1_FlashRGBFlag!, type: .withoutResponse)
-            
-        case "CORK2":
-            
-            let FlashState = flag
-            let data = Data(FlashState.utf8)
-            print("data = ", data)
-            Cork2?.writeValue(data, for: Cork2_FlashRGBFlag!, type: .withoutResponse)
-            
-        case "CORK3":
-            
-            let FlashState = flag
-            let data = Data(FlashState.utf8)
-            print("data = ", data)
-            Cork3?.writeValue(data, for: Cork3_FlashRGBFlag!, type: .withoutResponse)
-            
-        default:
-            print("NO CORK TO SEND.....")
-    }
-    }
+    
     
     @IBAction func sendTareRequest(_ sender: Any) {
         print("Hello Tare")
