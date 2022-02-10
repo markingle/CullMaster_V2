@@ -8,6 +8,7 @@
 //github.com/espressif/esp-idf/blob/master/examples/bluetooth/bluedroid/ble/gatt_security_server/tutorial/Gatt_Security_Server_Example_Walkthrough.md
 //www.youtube.com/watch?v=TwexLJwdLEw
 
+
 import UIKit
 import CoreData
 import CoreBluetooth
@@ -15,11 +16,18 @@ import CoreBluetooth
 // MARK: - Core Bluetooth service IDs
 let Weight_Scale_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c331914b")
 
-let Cork1_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c331914c")
-let Cork2_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c331914d")
-let Cork3_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c331914e")
-let Cork4_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c331914f")
-let Cork5_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c3319141")
+//let Cork1_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c331914c")
+//let Cork2_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c331914d")
+//let Cork3_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c331914e")
+//let Cork4_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c331914f")
+//let Cork5_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c3319141")
+
+let RED_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c331914c")
+let GREEN_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c331914d")
+let BLACK_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c331914e")
+let YELLO_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c331914f")
+let WHITE_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c3319141")
+//let BLUE_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c3319142")
 
 // MARK: - Core Bluetooth characteristic IDs
 //WEIGHT SCALE CHARACTERISTICS
@@ -31,9 +39,12 @@ let Fish_Weight_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F5-
 let Battery_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F5-EA07361B26D9")
 
 //CORK CHARACTERISTICS WORKING (One characteristic for each cork...1 - 1  This doesnt seem right!!!!  :(  )
-let Cork1_FlashRGB_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F6-EA07361B2611")
-let Cork2_FlashRGB_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F6-EA07361B2612")
-let Cork3_FlashRGB_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F6-EA07361B2613")
+let RED_FlashRGB_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F6-EA07361B2611")
+let GREEN_FlashRGB_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F6-EA07361B2612")
+let BLACK_FlashRGB_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F6-EA07361B2613")
+let YELLO_FlashRGB_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F6-EA07361B2614")
+let WHITE_FlashRGB_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F6-EA07361B2615")
+//let BLUE_FlashRGB_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F6-EA07361B2616")
 
 class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDelegate {
     // MARK: - Core Bluetooth class member variables
@@ -44,11 +55,12 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
     // these vars cannot be listed in an extension so place them in the class
     var centralManager: CBCentralManager?
     var WeightScale: CBPeripheral?
-    var Cork1: CBPeripheral?
-    var Cork2: CBPeripheral?
-    var Cork3: CBPeripheral?
-    var Cork4: CBPeripheral?
-    var Cork5: CBPeripheral?
+    var RED: CBPeripheral?
+    var GREEN: CBPeripheral?
+    var BLACK: CBPeripheral?
+    var YELLO: CBPeripheral?
+    var WHITE: CBPeripheral?
+    //var BLUE: CBPeripheral?
     
     @IBOutlet weak var weightDataLabel: UITextField!
     @IBOutlet weak var totalWeightLabel: UITextField!
@@ -63,9 +75,12 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
     // Characteristics
     private var WeightData: CBCharacteristic?
     private var TareFlag: CBCharacteristic?
-    private var Cork1_FlashRGBFlag: CBCharacteristic?
-    private var Cork2_FlashRGBFlag: CBCharacteristic?
-    private var Cork3_FlashRGBFlag: CBCharacteristic?
+    private var RED_FlashRGBFlag: CBCharacteristic?
+    private var GREEN_FlashRGBFlag: CBCharacteristic?
+    private var BLACK_FlashRGBFlag: CBCharacteristic?
+    private var YELLO_FlashRGBFlag: CBCharacteristic?
+    private var WHITE_FlashRGBFlag: CBCharacteristic?
+    //private var BLUE_FlashRGBFlag: CBCharacteristic?
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -132,12 +147,16 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                 //www.bluetooth.com/blog/a-new-way-to-debug-iosbluetooth-applications/
                 //toscode.gitee.com/pingdan/IOS-CoreBluetooth-Mock/tree/develop
                 //Scan for peripherals that we're interested in
-                //[Weight_Scale_Service_CBUUID,Cork1_Service_CBUUID, Cork2_Service_CBUUID,Cork3_Service_CBUUID,Cork4_Service_CBUUID,Cork5_Service_CBUUID]
-                //centralManager?.scanForPeripherals(withServices: [Cork1_Service_CBUUID, Weight_Scale_Service_CBUUID], options: [CBCentralManagerScanOptionSolicitedServiceUUIDsKey: true])
+                //[Weight_Scale_Service_CBUUID,RED_Service_CBUUID, GREEN_Service_CBUUID,BLACK_Service_CBUUID,YELLO_Service_CBUUID,WHITE_Service_CBUUID]
+                //centralManager?.scanForPeripherals(withServices: [RED_Service_CBUUID, Weight_Scale_Service_CBUUID], options: [CBCentralManagerScanOptionSolicitedServiceUUIDsKey: true])
                 //print("Central Manager Looking!!")
 
-                centralManager?.scanForPeripherals(withServices: [Weight_Scale_Service_CBUUID,Cork1_Service_CBUUID,Cork2_Service_CBUUID,Cork3_Service_CBUUID, Cork4_Service_CBUUID,Cork5_Service_CBUUID])
+                centralManager?.scanForPeripherals(withServices: [Weight_Scale_Service_CBUUID,RED_Service_CBUUID,GREEN_Service_CBUUID,BLACK_Service_CBUUID, YELLO_Service_CBUUID,WHITE_Service_CBUUID])
                 print("Central Manager Looking!!")
+                
+                let connectedPeripherals = centralManager?.retrieveConnectedPeripherals(withServices: [Weight_Scale_Service_CBUUID,RED_Service_CBUUID,GREEN_Service_CBUUID,BLACK_Service_CBUUID, YELLO_Service_CBUUID,WHITE_Service_CBUUID])
+                        // WILL [] RETURN ALL CONNECTED PERIPHERALS?
+                print("connectedPeripherals are \(String(describing: connectedPeripherals))")
             default: break
             } // END switch
             
@@ -148,12 +167,16 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         //Use a flag for now
         //TODO: Build setup for storing cull corks in a table
         
+        let connectedPeripherals = centralManager?.retrieveConnectedPeripherals(withServices: [Weight_Scale_Service_CBUUID,RED_Service_CBUUID,GREEN_Service_CBUUID,BLACK_Service_CBUUID, YELLO_Service_CBUUID,WHITE_Service_CBUUID])
+                // WILL [] RETURN ALL CONNECTED PERIPHERALS?
+        print("connectedPeripherals are \(String(describing: connectedPeripherals))")
+        
         let reset_corks = 1
         
 //>>>>>>>>>>>>>>>>>>>>>>>>> CORK 1 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     
-        if peripheral.name == "CORK1"{
-            print("Found the peripheral called CORK1")
+        if peripheral.name == "RED"{
+            print("Found the peripheral called RED")
             if reset_corks == 1 {
                 let name = peripheral.name
                 let newCork = Cork_Table(context: self.context)
@@ -168,16 +191,16 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             }
             
             decodePeripheralState(peripheralState: peripheral.state)
-            Cork1 = peripheral
-            Cork1?.delegate = self
-            centralManager?.connect(Cork1!)
+            RED = peripheral
+            RED?.delegate = self
+            centralManager?.connect(RED!)
             decodePeripheralState(peripheralState: peripheral.state)
         }
     
 //>>>>>>>>>>>>>>>>>>>>>>>>> CORK 2 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-        if peripheral.name == "CORK2"{
-            print("Found the peripheral called CORK2")
+        if peripheral.name == "GREEN"{
+            print("Found the peripheral called GREEN")
             if reset_corks == 1 {
                 let name = peripheral.name
                 let newCork = Cork_Table(context: self.context)
@@ -192,16 +215,16 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             }
             
             decodePeripheralState(peripheralState: peripheral.state)
-            Cork2 = peripheral
-            Cork2?.delegate = self
-            centralManager?.connect(Cork2!)
+            GREEN = peripheral
+            GREEN?.delegate = self
+            centralManager?.connect(GREEN!)
             decodePeripheralState(peripheralState: peripheral.state)
         }
 
 //>>>>>>>>>>>>>>>>>>>>>>>>> CORK 3 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-        if peripheral.name == "CORK3"{
-            print("Found the peripheral called CORK3")
+        if peripheral.name == "BLACK"{
+            print("Found the peripheral called BLACK")
             if reset_corks == 1 {
                 let name = peripheral.name
                 let newCork = Cork_Table(context: self.context)
@@ -216,16 +239,16 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             }
             
             decodePeripheralState(peripheralState: peripheral.state)
-            Cork3 = peripheral
-            Cork3?.delegate = self
-            centralManager?.connect(Cork3!)
+            BLACK = peripheral
+            BLACK?.delegate = self
+            centralManager?.connect(BLACK!)
             decodePeripheralState(peripheralState: peripheral.state)
         }
 
 //>>>>>>>>>>>>>>>>>>>>>>>>> CORK 4 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-/*
-                if peripheral.name == "CORK4"{
-                    print("Found the peripheral called CORK4")
+
+                if peripheral.name == "YELLO"{
+                    print("Found the peripheral called YELLO")
                     if reset_corks == 1 {
                         let name = peripheral.name
                         let newCork = Cork_Table(context: self.context)
@@ -240,17 +263,17 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                     }
                     
                     decodePeripheralState(peripheralState: peripheral.state)
-                    Cork4 = peripheral
-                    Cork4?.delegate = self
-                    centralManager?.connect(Cork4!)
+                    YELLO = peripheral
+                    YELLO?.delegate = self
+                    centralManager?.connect(YELLO!)
                     decodePeripheralState(peripheralState: peripheral.state)
                 }
         
         
 //>>>>>>>>>>>>>>>>>>>>>>>>> CORK 5 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-                       
-                        if peripheral.name == "CORK5"{
-                            print("Found the peripheral called CORK5")
+
+                        if peripheral.name == "WHITE"{
+                            print("Found the peripheral called WHITE")
                             if reset_corks == 1 {
                                 let name = peripheral.name
                                 let newCork = Cork_Table(context: self.context)
@@ -265,12 +288,12 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                             }
                             
                             decodePeripheralState(peripheralState: peripheral.state)
-                            Cork5 = peripheral
-                            Cork5?.delegate = self
-                            centralManager?.connect(Cork5!)
+                            WHITE = peripheral
+                            WHITE?.delegate = self
+                            centralManager?.connect(WHITE!)
                             decodePeripheralState(peripheralState: peripheral.state)
                         }
-*/
+
 //>>>>>>>>>>>>>>>>>>>>>>>>> WSCALE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
        
         if peripheral.name == "WSALE"{
@@ -282,6 +305,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             centralManager?.connect(WeightScale!)
             decodePeripheralState(peripheralState: peripheral.state)
         }
+        
         
 } // END func centralManager(... didDiscover peripheral
     
@@ -305,37 +329,37 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         }
         
         decodePeripheralState(peripheralState: peripheral.state)
-        if peripheral == Cork1 {
-            print("Did Connect....Looking for Cork1 Service")
-            Cork1?.discoverServices([Cork1_Service_CBUUID])
+        if peripheral == RED {
+            print("Did Connect....Looking for RED Service")
+            RED?.discoverServices([RED_Service_CBUUID])
         }
         
         
         decodePeripheralState(peripheralState: peripheral.state)
-        if peripheral == Cork2 {
-            print("Did Connect....Looking for Cork2 Service")
-            Cork2?.discoverServices([Cork2_Service_CBUUID])
+        if peripheral == GREEN {
+            print("Did Connect....Looking for GREEN Service")
+            GREEN?.discoverServices([GREEN_Service_CBUUID])
         }
         
         
         decodePeripheralState(peripheralState: peripheral.state)
-        if peripheral == Cork3 {
-            print("Did Connect....Looking for Cork3 Service")
-            Cork3?.discoverServices([Cork3_Service_CBUUID])
+        if peripheral == BLACK {
+            print("Did Connect....Looking for BLACK Service")
+            BLACK?.discoverServices([BLACK_Service_CBUUID])
         }
         
         
         decodePeripheralState(peripheralState: peripheral.state)
-        if peripheral == Cork4 {
-            print("Did Connect....Looking for Cork4 Service")
-            Cork4?.discoverServices([Cork4_Service_CBUUID])
+        if peripheral == YELLO {
+            print("Did Connect....Looking for YELLOW Service")
+            YELLO?.discoverServices([YELLO_Service_CBUUID])
         }
         
         
         decodePeripheralState(peripheralState: peripheral.state)
-        if peripheral == Cork5 {
-            print("Did Connect....Looking for Cork5 Service")
-            Cork5?.discoverServices([Cork5_Service_CBUUID])
+        if peripheral == WHITE {
+            print("Did Connect....Looking for WHITE Service")
+            WHITE?.discoverServices([WHITE_Service_CBUUID])
         }
         
     } // END func centralManager(... didConnect peripheral
@@ -354,7 +378,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             
         }
         
-        if service.uuid == Cork1_Service_CBUUID {
+        if service.uuid == RED_Service_CBUUID {
             
             print("Service: \(service)")
             
@@ -364,7 +388,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             
         }
         
-        if service.uuid == Cork2_Service_CBUUID {
+        if service.uuid == GREEN_Service_CBUUID {
             
             print("Service: \(service)")
             
@@ -374,7 +398,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             
         }
         
-        if service.uuid == Cork3_Service_CBUUID {
+        if service.uuid == BLACK_Service_CBUUID {
             
             print("Service: \(service)")
             
@@ -384,7 +408,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             
         }
         
-        if service.uuid == Cork4_Service_CBUUID {
+        if service.uuid == YELLO_Service_CBUUID {
             
             print("Service: \(service)")
             
@@ -393,7 +417,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             peripheral.discoverCharacteristics(nil, for: service)
             
         }
-        if service.uuid == Cork5_Service_CBUUID {
+        if service.uuid == WHITE_Service_CBUUID {
             
             print("Service: \(service)")
             
@@ -407,12 +431,15 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
     }
     
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        connectionActivityStatus.backgroundColor = UIColor.black
-        connectionActivityStatus.startAnimating()
-        centralManager?.scanForPeripherals(withServices: [Weight_Scale_Service_CBUUID,Cork1_Service_CBUUID,Cork2_Service_CBUUID,Cork3_Service_CBUUID, Cork4_Service_CBUUID,Cork5_Service_CBUUID])
+        
+        DispatchQueue.main.async { () -> Void in
+            self.connectionActivityStatus.backgroundColor = UIColor.black
+            self.connectionActivityStatus.startAnimating()
+        }
+        
+        //centralManager?.scanForPeripherals(withServices: [Weight_Scale_Service_CBUUID,RED_Service_CBUUID,GREEN_Service_CBUUID,BLACK_Service_CBUUID, YELLO_Service_CBUUID,WHITE_Service_CBUUID])
         print("Peripheral disconnect.....Central Manager Looking!!")
     }
-    
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         
         
@@ -434,19 +461,29 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                 self.TareFlag = characteristic
             }
             
-            if characteristic.uuid == Cork1_FlashRGB_Characteristic_CBUUID{
-                print("Flash RBG Flag")
-                self.Cork1_FlashRGBFlag = characteristic
+            if characteristic.uuid == RED_FlashRGB_Characteristic_CBUUID{
+                print("Flash RED RBG Flag")
+                self.RED_FlashRGBFlag = characteristic
             }
             
-            if characteristic.uuid == Cork2_FlashRGB_Characteristic_CBUUID{
-                print("Flash RBG Flag")
-                self.Cork2_FlashRGBFlag = characteristic
+            if characteristic.uuid == GREEN_FlashRGB_Characteristic_CBUUID{
+                print("Flash GREEN RBG Flag")
+                self.GREEN_FlashRGBFlag = characteristic
             }
             
-            if characteristic.uuid == Cork3_FlashRGB_Characteristic_CBUUID{
-                print("Flash RBG Flag")
-                self.Cork3_FlashRGBFlag = characteristic
+            if characteristic.uuid == BLACK_FlashRGB_Characteristic_CBUUID{
+                print("Flash BLACK RBG Flag")
+                self.BLACK_FlashRGBFlag = characteristic
+            }
+            
+            if characteristic.uuid == YELLO_FlashRGB_Characteristic_CBUUID{
+                print("Flash YELLO RBG Flag")
+                self.YELLO_FlashRGBFlag = characteristic
+            }
+            
+            if characteristic.uuid == WHITE_FlashRGB_Characteristic_CBUUID{
+                print("Flash WHITE RBG Flag")
+                self.WHITE_FlashRGBFlag = characteristic
             }
         }
     } // END func peripheral(... didDiscoverCharacteristicsFor service
@@ -494,26 +531,40 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         
         switch cork_to_flag {
             
-        case "CORK1":
+        case "RED":
             
             let FlashState = flag
             let data = Data(FlashState.utf8)
             print("data = ", data)
-            Cork1?.writeValue(data, for: Cork1_FlashRGBFlag!, type: .withoutResponse)
+            RED?.writeValue(data, for: RED_FlashRGBFlag!, type: .withoutResponse)
             
-        case "CORK2":
-            
-            let FlashState = flag
-            let data = Data(FlashState.utf8)
-            print("data = ", data)
-            Cork2?.writeValue(data, for: Cork2_FlashRGBFlag!, type: .withoutResponse)
-            
-        case "CORK3":
+        case "GREEN":
             
             let FlashState = flag
             let data = Data(FlashState.utf8)
             print("data = ", data)
-            Cork3?.writeValue(data, for: Cork3_FlashRGBFlag!, type: .withoutResponse)
+            GREEN?.writeValue(data, for: GREEN_FlashRGBFlag!, type: .withoutResponse)
+            
+        case "BLACK":
+            
+            let FlashState = flag
+            let data = Data(FlashState.utf8)
+            print("data = ", data)
+            BLACK?.writeValue(data, for: BLACK_FlashRGBFlag!, type: .withoutResponse)
+            
+        case "YELLO":
+            
+            let FlashState = flag
+            let data = Data(FlashState.utf8)
+            print("data = ", data)
+            YELLO?.writeValue(data, for: YELLO_FlashRGBFlag!, type: .withoutResponse)
+        
+        case "WHITE":
+            
+            let FlashState = flag
+            let data = Data(FlashState.utf8)
+            print("data = ", data)
+            WHITE?.writeValue(data, for: WHITE_FlashRGBFlag!, type: .withoutResponse)
             
         default:
             print("NO CORK TO SEND.....")
@@ -537,7 +588,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             let request = Fish_Table.fetchRequest() as NSFetchRequest<Fish_Table>
             let sort = NSSortDescriptor(key: "weight", ascending: false)
             request.sortDescriptors = [sort]
-            request.fetchLimit = 3         //CHANGE THIS BACK TO 5 WHEN YOU GET MORE TinyPICO
+            request.fetchLimit = 5         //CHANGE THIS BACK TO 5 WHEN YOU GET MORE TinyPICO
             self.items = try context.fetch(request)
             DispatchQueue.main.async {
                 self.tableView.reloadData()
@@ -633,7 +684,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                 let request = Fish_Table.fetchRequest() as NSFetchRequest<Fish_Table>
                 let sort = NSSortDescriptor(key: "weight", ascending: true)
                 request.sortDescriptors = [sort]
-                //request.fetchLimit = 3         //CHANGE THIS BACK TO 5 WHEN YOU GET MORE TinyPICO
+                request.fetchLimit = 5         //CHANGE THIS BACK TO 5 WHEN YOU GET MORE TinyPICO
                 self.items = try context.fetch(request)
                 let minitem = self.items?.first!
                 let minweight = minitem?.weight
@@ -724,7 +775,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                         print("Save Failed.........")
                     }
                     self.fetchFish()
-                    //self.sendFlashRGB(cork_to_flag: "CORK1", flag: "0")  // <-- Stop flashing the RGB on the Cork
+                    //self.sendFlashRGB(cork_to_flag: "RED", flag: "0")  // <-- Stop flashing the RGB on the Cork
                 }
             } else {
                     self.showsmallest(assign_capturedWeight: capturedWeight)
