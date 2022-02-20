@@ -36,7 +36,12 @@ let Tare_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F6-EA07361
 
 //CORK CHARACTERISTICS PREFERRED (One characteristic for all corks.  There are three corks - 1 to 3....Why cant I do this!!!)
 let Fish_Weight_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F5-EA07361B26C8")
-let Battery_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F5-EA07361B26D9")
+let RED_Battery_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F5-EA07361B26D1")
+//let Battery_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F5-EA07361B26D2")
+//let Battery_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F5-EA07361B26D3")
+//let Battery_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F5-EA07361B26D4")
+//let Battery_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F5-EA07361B26D5")
+//let Battery_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F5-EA07361B26D6")
 
 //CORK CHARACTERISTICS WORKING (One characteristic for each cork...1 - 1  This doesnt seem right!!!!  :(  )
 let RED_FlashRGB_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F6-EA07361B2611")
@@ -72,15 +77,25 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
     
     @IBOutlet weak var cullCorkList: UITabBar!
     
-    // Characteristics
+    // SCALE WEIGHT Characteristics
     private var WeightData: CBCharacteristic?
     private var TareFlag: CBCharacteristic?
+    
+    // CORK FLASH RGB Characteristics
     private var RED_FlashRGBFlag: CBCharacteristic?
     private var GREEN_FlashRGBFlag: CBCharacteristic?
     private var BLACK_FlashRGBFlag: CBCharacteristic?
     private var YELLO_FlashRGBFlag: CBCharacteristic?
     private var WHITE_FlashRGBFlag: CBCharacteristic?
     //private var BLUE_FlashRGBFlag: CBCharacteristic?
+    
+    // CORK BATTERY Characteristics
+    private var RED_voltage: CBCharacteristic?
+    //private var GREEN_voltage: CBCharacteristic?
+    //private var BLACK_voltage: CBCharacteristic?
+    //private var YELLO_voltage: CBCharacteristic?
+    //private var WHITE_voltage: CBCharacteristic?
+    //private var BLUE_voltage: CBCharacteristic?
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -154,9 +169,6 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                 centralManager?.scanForPeripherals(withServices: [Weight_Scale_Service_CBUUID,RED_Service_CBUUID,GREEN_Service_CBUUID,BLACK_Service_CBUUID, YELLO_Service_CBUUID,WHITE_Service_CBUUID])
                 print("Central Manager Looking!!")
                 
-                let connectedPeripherals = centralManager?.retrieveConnectedPeripherals(withServices: [Weight_Scale_Service_CBUUID,RED_Service_CBUUID,GREEN_Service_CBUUID,BLACK_Service_CBUUID, YELLO_Service_CBUUID,WHITE_Service_CBUUID])
-                        // WILL [] RETURN ALL CONNECTED PERIPHERALS?
-                print("connectedPeripherals are \(String(describing: connectedPeripherals))")
             default: break
             } // END switch
             
@@ -167,9 +179,9 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         //Use a flag for now
         //TODO: Build setup for storing cull corks in a table
         
-        let connectedPeripherals = centralManager?.retrieveConnectedPeripherals(withServices: [Weight_Scale_Service_CBUUID,RED_Service_CBUUID,GREEN_Service_CBUUID,BLACK_Service_CBUUID, YELLO_Service_CBUUID,WHITE_Service_CBUUID])
+        //let connectedPeripherals = centralManager?.retrieveConnectedPeripherals(withServices: [Weight_Scale_Service_CBUUID,RED_Service_CBUUID,GREEN_Service_CBUUID,BLACK_Service_CBUUID, YELLO_Service_CBUUID,WHITE_Service_CBUUID])
                 // WILL [] RETURN ALL CONNECTED PERIPHERALS?
-        print("connectedPeripherals are \(String(describing: connectedPeripherals))")
+       // print("connectedPeripherals are \(String(describing: connectedPeripherals))")
         
         let reset_corks = 1
         
@@ -437,7 +449,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             self.connectionActivityStatus.startAnimating()
         }
         
-        //centralManager?.scanForPeripherals(withServices: [Weight_Scale_Service_CBUUID,RED_Service_CBUUID,GREEN_Service_CBUUID,BLACK_Service_CBUUID, YELLO_Service_CBUUID,WHITE_Service_CBUUID])
+        centralManager?.scanForPeripherals(withServices: [Weight_Scale_Service_CBUUID,RED_Service_CBUUID,GREEN_Service_CBUUID,BLACK_Service_CBUUID, YELLO_Service_CBUUID,WHITE_Service_CBUUID])
         print("Peripheral disconnect.....Central Manager Looking!!")
     }
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
@@ -484,6 +496,11 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             if characteristic.uuid == WHITE_FlashRGB_Characteristic_CBUUID{
                 print("Flash WHITE RBG Flag")
                 self.WHITE_FlashRGBFlag = characteristic
+            }
+            
+            if characteristic.uuid == RED_Battery_Characteristic_CBUUID{
+                print("RED Battery Voltage")
+                self.RED_voltage = characteristic
             }
         }
     } // END func peripheral(... didDiscoverCharacteristicsFor service
@@ -805,7 +822,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
     }
     
     @IBAction func catchListView(){
-        guard let vc = storyboard!.instantiateViewController(withIdentifier: "Cork_VC_ID") as? CorkViewController else {
+        guard let vc = storyboard!.instantiateViewController(withIdentifier: "Battery_VC_ID") as? BatteryViewController else {
             return
         }
                 present(vc, animated: true)
@@ -863,6 +880,9 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource{
         dateFormatter.dateFormat = "MM/dd/yy | hh:mm:ss"
         
         //https://www.brianadvent.com/build-simple-core-data-driven-ios-app/
+        cell.backgroundColor = UIColor.black
+        cell.textLabel?.textColor = UIColor.green
+        cell.textLabel?.adjustsFontSizeToFitWidth = true
         
         cell.textLabel?.text = fish_ID! + " | " + "\(String(describing: fish_weight))" + " | " +  dateFormatter.string(from: caught_date)
         

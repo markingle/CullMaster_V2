@@ -20,6 +20,7 @@
 		0A991690270151A80043DE65 /* Cork_Table+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A99168C270151A80043DE65 /* Cork_Table+CoreDataClass.swift */; };
 		0A991691270151A80043DE65 /* Cork_Table+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A99168D270151A80043DE65 /* Cork_Table+CoreDataProperties.swift */; };
 		0A9916932703F0620043DE65 /* CorkViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9916922703F0620043DE65 /* CorkViewController.swift */; };
+		0AAA793E27B9B7AC0024D226 /* BatteryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AAA793D27B9B7AC0024D226 /* BatteryViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		0A99168C270151A80043DE65 /* Cork_Table+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Cork_Table+CoreDataClass.swift"; sourceTree = "<group>"; };
 		0A99168D270151A80043DE65 /* Cork_Table+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Cork_Table+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		0A9916922703F0620043DE65 /* CorkViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CorkViewController.swift; sourceTree = "<group>"; };
+		0AAA793D27B9B7AC0024D226 /* BatteryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatteryViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +102,7 @@
 			children = (
 				0A79AAA726F410D500F76D83 /* ViewController.swift */,
 				0A9916922703F0620043DE65 /* CorkViewController.swift */,
+				0AAA793D27B9B7AC0024D226 /* BatteryViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -175,6 +178,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A79AAC026F5A09600F76D83 /* FriendlyAdvData.swift in Sources */,
+				0AAA793E27B9B7AC0024D226 /* BatteryViewController.swift in Sources */,
 				0A99168E270151A80043DE65 /* Fish_Table+CoreDataClass.swift in Sources */,
 				0A79AAA826F410D500F76D83 /* ViewController.swift in Sources */,
 				0A79AAAE26F410D500F76D83 /* CullMaster_V2.xcdatamodeld in Sources */,

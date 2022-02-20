@@ -83,12 +83,13 @@ extension CorkViewController: UITableViewDelegate, UITableViewDataSource{
         let corks = self.corks![indexPath.row]
         
         let cork_ID = corks.name
-        let cork_MAC = corks.mAC
+        let cork_voltage = corks.voltage
         let cork_in_use = corks.used
         
         //www.brianadvent.com/build-simple-core-data-driven-ios-app/
+        cell.textLabel?.textColor = UIColor.green
         
-        cell.textLabel?.text = cork_ID! + " | " + "\(cork_MAC ?? "??")" + " | " + String(cork_in_use)
+        cell.textLabel?.text = cork_ID! + " | " + String(cork_voltage) + " | " + String(cork_in_use)
         
         return cell
     }

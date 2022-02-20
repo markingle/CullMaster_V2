@@ -19,6 +19,7 @@ extension Cork_Table {
     @NSManaged public var name: String?
     @NSManaged public var mAC: String?
     @NSManaged public var used: Int64
+    @NSManaged public var voltage: Int64
 
 }
 
