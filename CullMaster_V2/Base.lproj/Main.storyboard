@@ -113,14 +113,14 @@
                                 </textAttributes>
                                 <items>
                                     <navigationItem title="Cull Master Catch List" largeTitleDisplayMode="always" id="9cS-kQ-rRg">
-                                        <barButtonItem key="leftBarButtonItem" style="plain" id="fAd-6O-ddj">
+                                        <barButtonItem key="leftBarButtonItem" id="fAd-6O-ddj">
                                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="PoH-aj-Rcu">
                                                 <rect key="frame" x="20" y="5" width="92" height="34.5"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="plain" title="Batteries">
-                                                    <color key="baseForegroundColor" red="0.20177924820000001" green="1" blue="0.21231786280000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                                </buttonConfiguration>
+                                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                                <state key="normal" title="Batteries">
+                                                    <color key="titleColor" red="0.20177924820000001" green="1" blue="0.21231786280000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                </state>
                                                 <connections>
                                                     <action selector="catchListView" destination="BYZ-38-t0r" eventType="touchUpInside" id="egS-zC-PR5"/>
                                                 </connections>

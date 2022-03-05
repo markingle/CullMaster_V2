@@ -732,9 +732,11 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             
             
             //Cancel action
-            alert.addAction(UIAlertAction(title: "Cancel", style: .default) { (alertAction) in })
+            alert.addAction(UIAlertAction(title: "Cancel", style: .default) { (alertAction) in
+                self.sendFlashRGB(cork_to_flag: Cork, flag: "0")  // <-- Stop flashing the RGB on the Cork
+            })
             self.present(alert, animated:true, completion: nil)
-            //self.sendFlashRGB(cork_to_flag: Cork, flag: "0")  // <-- Stop flashing the RGB on the Cork
+            
         } catch {
         print("fetch failed")
     }
