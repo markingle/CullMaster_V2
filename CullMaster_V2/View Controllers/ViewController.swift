@@ -775,25 +775,26 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                     let Cork = results.first?.name
                     self.sendFlashRGB(cork_to_flag: Cork ?? "---", flag: "1")  // <-- Start flashing the RGB on the Cork
                     print("Init Cork \(String(describing: Cork))")
-                    let alertController = UIAlertController(title: "Weight Captured", message:"", preferredStyle: .alert)
+                    let alertController = UIAlertController(title: "Weight Captured \(capturedWeight ) ", message:"", preferredStyle: .alert)
                     // add the actions (buttons)
                     alertController.addAction (UIAlertAction(title: "Cork Attached?", style: .default) { (alertAction) in
-                    self.sendFlashRGB(cork_to_flag: Cork ?? "---", flag: "0")  // <-- Start flashing the RGB on the Cork
-                    })
-                    alertController.addAction(UIAlertAction(title: "Cancel", style: .default) { (alertAction) in })
-                    self.present(alertController, animated:true, completion: nil)
-                    
+                    self.sendFlashRGB(cork_to_flag: Cork ?? "---", flag: "0")  // <-- Stop flashing the RGB on the Cork
                     let newFish = Fish_Table(context: self.context)
-                    newFish.fish_ID = results.first!.name
-                    newFish.weight = capturedWeight
-                    newFish.date = Date()
-                                
+                        newFish.fish_ID = results.first!.name
+                        newFish.weight = capturedWeight
+                        newFish.date = Date()
+                                    
                     do {
                         try self.context.save()
                     }catch {
                         print("Save Failed.........")
                     }
                     self.fetchFish()
+                    })
+                    alertController.addAction(UIAlertAction(title: "Cancel", style: .default) { (alertAction) in self.sendFlashRGB(cork_to_flag: Cork ?? "---", flag: "0")  })// <-- Stop flashing the RGB on the Cork
+                    self.present(alertController, animated:true, completion: nil)
+                    
+                    
                     //self.sendFlashRGB(cork_to_flag: "RED", flag: "0")  // <-- Stop flashing the RGB on the Cork
                 }
             } else {
