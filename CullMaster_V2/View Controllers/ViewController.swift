@@ -29,6 +29,15 @@ let YELLO_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c331914f"
 let WHITE_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c3319141")
 //let BLUE_Service_CBUUID = CBUUID(string: "4fafc201-1fb5-459e-8fcc-c5c9c3319142")
 
+let GREEN_Battery_Service_CBUUID = CBUUID(string: "180F")
+let YELLO_Battery_Service_CBUUID = CBUUID(string: "180F")
+let RED_Battery_Service_CBUUID = CBUUID(string: "180F")
+let BLACK_Battery_Service_CBUUID = CBUUID(string: "180F")
+let WHITE_Battery_Service_CBUUID = CBUUID(string: "180F")
+
+
+
+
 // MARK: - Core Bluetooth characteristic IDs
 //WEIGHT SCALE CHARACTERISTICS
 let Weight_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F5-EA07361B26A6")
@@ -36,12 +45,11 @@ let Tare_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F6-EA07361
 
 //CORK CHARACTERISTICS PREFERRED (One characteristic for all corks.  There are three corks - 1 to 3....Why cant I do this!!!)
 let Fish_Weight_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F5-EA07361B26C8")
-let RED_Battery_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F5-EA07361B26D1")
-//let Battery_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F5-EA07361B26D2")
-//let Battery_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F5-EA07361B26D3")
-//let Battery_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F5-EA07361B26D4")
-//let Battery_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F5-EA07361B26D5")
-//let Battery_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F5-EA07361B26D6")
+let GREEN_Battery_Characteristic_CBUUID = CBUUID(string: "2A19")
+let YELLO_Battery_Characteristic_CBUUID = CBUUID(string: "2A20")
+let RED_Battery_Characteristic_CBUUID = CBUUID(string: "2A21")
+let WHITE_Battery_Characteristic_CBUUID = CBUUID(string: "2A22")
+let BLACK_Battery_Characteristic_CBUUID = CBUUID(string: "2A23")
 
 //CORK CHARACTERISTICS WORKING (One characteristic for each cork...1 - 1  This doesnt seem right!!!!  :(  )
 let RED_FlashRGB_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F6-EA07361B2611")
@@ -70,6 +78,12 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
     @IBOutlet weak var weightDataLabel: UITextField!
     @IBOutlet weak var totalWeightLabel: UITextField!
     
+    @IBOutlet weak var REDBatteryInfoText: UITextField!
+    @IBOutlet weak var GREENBatteryInfoText: UITextField!
+    @IBOutlet weak var YELLOBatteryInfoText: UITextField!
+    @IBOutlet weak var BLACKBatteryInfoText: UITextField!
+    @IBOutlet weak var WHITEBatteryInfoText: UITextField!
+    
     @IBOutlet weak var connectionActivityStatus: UIActivityIndicatorView!
     @IBOutlet weak var bluetoothOffLabel: UILabel!
 
@@ -81,6 +95,13 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
     private var WeightData: CBCharacteristic?
     private var TareFlag: CBCharacteristic?
     
+    private var GREENBatteryInfo: CBCharacteristic?
+    private var YELLOBatteryInfo: CBCharacteristic?
+    private var REDBatteryInfo: CBCharacteristic?
+    private var BLACKBatteryInfo: CBCharacteristic?
+    private var WHITEBatteryInfo: CBCharacteristic?
+   
+    
     // CORK FLASH RGB Characteristics
     private var RED_FlashRGBFlag: CBCharacteristic?
     private var GREEN_FlashRGBFlag: CBCharacteristic?
@@ -89,13 +110,6 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
     private var WHITE_FlashRGBFlag: CBCharacteristic?
     //private var BLUE_FlashRGBFlag: CBCharacteristic?
     
-    // CORK BATTERY Characteristics
-    private var RED_voltage: CBCharacteristic?
-    //private var GREEN_voltage: CBCharacteristic?
-    //private var BLACK_voltage: CBCharacteristic?
-    //private var YELLO_voltage: CBCharacteristic?
-    //private var WHITE_voltage: CBCharacteristic?
-    //private var BLUE_voltage: CBCharacteristic?
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -343,40 +357,42 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         decodePeripheralState(peripheralState: peripheral.state)
         if peripheral == RED {
             print("Did Connect....Looking for RED Service")
-            RED?.discoverServices([RED_Service_CBUUID])
+            RED?.discoverServices([RED_Service_CBUUID,RED_Battery_Service_CBUUID])
         }
         
         
         decodePeripheralState(peripheralState: peripheral.state)
         if peripheral == GREEN {
             print("Did Connect....Looking for GREEN Service")
-            GREEN?.discoverServices([GREEN_Service_CBUUID])
+            GREEN?.discoverServices([GREEN_Service_CBUUID,GREEN_Battery_Service_CBUUID])
         }
         
         
         decodePeripheralState(peripheralState: peripheral.state)
         if peripheral == BLACK {
             print("Did Connect....Looking for BLACK Service")
-            BLACK?.discoverServices([BLACK_Service_CBUUID])
+            BLACK?.discoverServices([BLACK_Service_CBUUID, BLACK_Battery_Service_CBUUID])
         }
         
         
         decodePeripheralState(peripheralState: peripheral.state)
         if peripheral == YELLO {
             print("Did Connect....Looking for YELLOW Service")
-            YELLO?.discoverServices([YELLO_Service_CBUUID])
+            YELLO?.discoverServices([YELLO_Service_CBUUID,YELLO_Battery_Service_CBUUID])
         }
         
         
         decodePeripheralState(peripheralState: peripheral.state)
         if peripheral == WHITE {
             print("Did Connect....Looking for WHITE Service")
-            WHITE?.discoverServices([WHITE_Service_CBUUID])
+            WHITE?.discoverServices([WHITE_Service_CBUUID,WHITE_Battery_Service_CBUUID])
         }
         
     } // END func centralManager(... didConnect peripheral
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+        
+        print("Peripheral: \(peripheral)")
     
     for service in peripheral.services! {
         
@@ -400,9 +416,29 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             
         }
         
+        if service.uuid == RED_Battery_Service_CBUUID {
+            
+            print("RED Battery Service: \(service)")
+            
+            // STEP 9: look for characteristics of interest
+            // within services of interest
+            peripheral.discoverCharacteristics(nil, for: service)
+            
+        }
+        
         if service.uuid == GREEN_Service_CBUUID {
             
-            print("Service: \(service)")
+            print("GREEN Service: \(service)")
+            
+            // STEP 9: look for characteristics of interest
+            // within services of interest
+            peripheral.discoverCharacteristics(nil, for: service)
+            
+        }
+        
+        if service.uuid == GREEN_Battery_Service_CBUUID {
+            
+            print("GREEN Battery Service: \(service)")
             
             // STEP 9: look for characteristics of interest
             // within services of interest
@@ -420,7 +456,37 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             
         }
         
+        if service.uuid == BLACK_Battery_Service_CBUUID {
+            
+            print("BLACK Battery Service: \(service)")
+            
+            // STEP 9: look for characteristics of interest
+            // within services of interest
+            peripheral.discoverCharacteristics(nil, for: service)
+            
+        }
+        
         if service.uuid == YELLO_Service_CBUUID {
+            
+            print("YELLO Service: \(service)")
+            
+            // STEP 9: look for characteristics of interest
+            // within services of interest
+            peripheral.discoverCharacteristics(nil, for: service)
+            
+        }
+        
+        if service.uuid == YELLO_Battery_Service_CBUUID {
+            
+            print("YELLO Battery Service: \(service)")
+            
+            // STEP 9: look for characteristics of interest
+            // within services of interest
+            peripheral.discoverCharacteristics(nil, for: service)
+            
+        }
+        
+        if service.uuid == WHITE_Service_CBUUID {
             
             print("Service: \(service)")
             
@@ -429,9 +495,10 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             peripheral.discoverCharacteristics(nil, for: service)
             
         }
-        if service.uuid == WHITE_Service_CBUUID {
+        
+        if service.uuid == WHITE_Battery_Service_CBUUID {
             
-            print("Service: \(service)")
+            print("WHITE Battery Service: \(service)")
             
             // STEP 9: look for characteristics of interest
             // within services of interest
@@ -452,6 +519,8 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         centralManager?.scanForPeripherals(withServices: [Weight_Scale_Service_CBUUID,RED_Service_CBUUID,GREEN_Service_CBUUID,BLACK_Service_CBUUID, YELLO_Service_CBUUID,WHITE_Service_CBUUID])
         print("Peripheral disconnect.....Central Manager Looking!!")
     }
+    
+    
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         
         
@@ -465,7 +534,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                 print("Weight Data")
                 WeightData = characteristic
                 peripheral.setNotifyValue(true, for: characteristic)
-                peripheral.readValue(for: characteristic)
+                //peripheral.readValue(for: characteristic)
             }
             
             if characteristic.uuid == Tare_Characteristic_CBUUID{
@@ -478,9 +547,23 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                 self.RED_FlashRGBFlag = characteristic
             }
             
+            if characteristic.uuid == RED_Battery_Characteristic_CBUUID{
+                print("RED Battery Info")
+                REDBatteryInfo = characteristic
+                peripheral.setNotifyValue(true, for: characteristic)
+                //peripheral.readValue(for: characteristic)
+            }
+            
             if characteristic.uuid == GREEN_FlashRGB_Characteristic_CBUUID{
                 print("Flash GREEN RBG Flag")
                 self.GREEN_FlashRGBFlag = characteristic
+            }
+            
+            if characteristic.uuid == GREEN_Battery_Characteristic_CBUUID{
+                print("GREEN Battery Info")
+                GREENBatteryInfo = characteristic
+                peripheral.setNotifyValue(true, for: characteristic)
+                //peripheral.readValue(for: characteristic)
             }
             
             if characteristic.uuid == BLACK_FlashRGB_Characteristic_CBUUID{
@@ -488,9 +571,23 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                 self.BLACK_FlashRGBFlag = characteristic
             }
             
+            if characteristic.uuid == BLACK_Battery_Characteristic_CBUUID{
+                print("BLACK Battery Info")
+                BLACKBatteryInfo = characteristic
+                peripheral.setNotifyValue(true, for: characteristic)
+                //peripheral.readValue(for: characteristic)
+            }
+            
             if characteristic.uuid == YELLO_FlashRGB_Characteristic_CBUUID{
                 print("Flash YELLO RBG Flag")
                 self.YELLO_FlashRGBFlag = characteristic
+            }
+            
+            if characteristic.uuid == YELLO_Battery_Characteristic_CBUUID{
+                print("YELLO Battery Info")
+                YELLOBatteryInfo = characteristic
+                peripheral.setNotifyValue(true, for: characteristic)
+                //peripheral.readValue(for: characteristic)
             }
             
             if characteristic.uuid == WHITE_FlashRGB_Characteristic_CBUUID{
@@ -498,9 +595,11 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                 self.WHITE_FlashRGBFlag = characteristic
             }
             
-            if characteristic.uuid == RED_Battery_Characteristic_CBUUID{
-                print("RED Battery Voltage")
-                self.RED_voltage = characteristic
+            if characteristic.uuid == WHITE_Battery_Characteristic_CBUUID{
+                print("WHITE Battery Info")
+                WHITEBatteryInfo = characteristic
+                peripheral.setNotifyValue(true, for: characteristic)
+                //peripheral.readValue(for: characteristic)
             }
         }
     } // END func peripheral(... didDiscoverCharacteristicsFor service
@@ -509,12 +608,10 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         
-        //print(characteristic)
-        
+        print(characteristic)
+        print(peripheral)
+     
         if characteristic.uuid == Weight_Characteristic_CBUUID {
-            
-            // We generally have to decode BLE
-            // data into human readable format
             
             let weight = characteristic.value!
             print(String(data: weight, encoding: String.Encoding.ascii)!);
@@ -522,7 +619,58 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             DispatchQueue.main.async { () -> Void in
                 self.weightDataLabel.text = String(data: weight, encoding: String.Encoding.ascii)
 
-        } // END if characteristic.uuid ==...
+            } // END if characteristic for Weight
+        }
+        
+        if  (GREEN?.name == "GREEN") && (characteristic.uuid == GREEN_Battery_Characteristic_CBUUID){
+            
+            print("GREEN Battery:", characteristic.value![0])
+            
+            DispatchQueue.main.async { () -> Void in
+                self.GREENBatteryInfoText.text = "\(characteristic.value![0])%"
+
+            } // END if characteristic.uuid for GREEN Battery Info
+        }
+        
+        
+        if (YELLO?.name == "YELLO") && (characteristic.uuid == YELLO_Battery_Characteristic_CBUUID) {
+            
+            print("YELLO Battery:", characteristic.value![0])
+            
+            DispatchQueue.main.async { () -> Void in
+                self.YELLOBatteryInfoText.text = "\(characteristic.value![0])%"
+
+            } // END if characteristic.uuid for YELLO Battery Info
+        }
+        
+        if (RED?.name == "RED") && (characteristic.uuid == RED_Battery_Characteristic_CBUUID) {
+            
+            print("RED Battery:", characteristic.value![0])
+            
+            DispatchQueue.main.async { () -> Void in
+                self.REDBatteryInfoText.text = "\(characteristic.value![0])%"
+
+            } // END if characteristic.uuid for RED Battery Info
+        }
+        
+        if (BLACK?.name == "BLACK") && (characteristic.uuid == BLACK_Battery_Characteristic_CBUUID) {
+            
+            print("BLACK Battery:", characteristic.value![0])
+            
+            DispatchQueue.main.async { () -> Void in
+                self.BLACKBatteryInfoText.text = "\(characteristic.value![0])%"
+
+            } // END if characteristic.uuid for BLACK Battery Info
+        }
+        
+        if (WHITE?.name == "WHITE") && (characteristic.uuid == BLACK_Battery_Characteristic_CBUUID) {
+            
+            print("WHITE Battery:", characteristic.value![0])
+            
+            DispatchQueue.main.async { () -> Void in
+                self.WHITEBatteryInfoText.text = "\(characteristic.value![0])%"
+
+            } // END if characteristic.uuid for WHITE Battery Info
         }
         
     } // END func peripheral(... didUpdateValueFor characteristic
