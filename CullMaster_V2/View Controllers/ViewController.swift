@@ -48,7 +48,7 @@ let Fish_Weight_Characteristic_CBUUID = CBUUID(string: "BEB5483E-36E1-4688-B7F5-
 let GREEN_Battery_Characteristic_CBUUID = CBUUID(string: "2A19")
 let YELLO_Battery_Characteristic_CBUUID = CBUUID(string: "2A20")
 let RED_Battery_Characteristic_CBUUID = CBUUID(string: "2A21")
-let WHITE_Battery_Characteristic_CBUUID = CBUUID(string: "2A22")
+let WHITE_Battery_Characteristic_CBUUID = CBUUID(string: "2A18")
 let BLACK_Battery_Characteristic_CBUUID = CBUUID(string: "2A23")
 
 //CORK CHARACTERISTICS WORKING (One characteristic for each cork...1 - 1  This doesnt seem right!!!!  :(  )
@@ -399,9 +399,6 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         if service.uuid == Weight_Scale_Service_CBUUID {
             
             print("Service: \(service)")
-            
-            // STEP 9: look for characteristics of interest
-            // within services of interest
             peripheral.discoverCharacteristics(nil, for: service)
             
         }
@@ -409,9 +406,6 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         if service.uuid == RED_Service_CBUUID {
             
             print("Service: \(service)")
-            
-            // STEP 9: look for characteristics of interest
-            // within services of interest
             peripheral.discoverCharacteristics(nil, for: service)
             
         }
@@ -419,9 +413,6 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         if service.uuid == RED_Battery_Service_CBUUID {
             
             print("RED Battery Service: \(service)")
-            
-            // STEP 9: look for characteristics of interest
-            // within services of interest
             peripheral.discoverCharacteristics(nil, for: service)
             
         }
@@ -429,9 +420,6 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         if service.uuid == GREEN_Service_CBUUID {
             
             print("GREEN Service: \(service)")
-            
-            // STEP 9: look for characteristics of interest
-            // within services of interest
             peripheral.discoverCharacteristics(nil, for: service)
             
         }
@@ -439,9 +427,6 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         if service.uuid == GREEN_Battery_Service_CBUUID {
             
             print("GREEN Battery Service: \(service)")
-            
-            // STEP 9: look for characteristics of interest
-            // within services of interest
             peripheral.discoverCharacteristics(nil, for: service)
             
         }
@@ -449,9 +434,6 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         if service.uuid == BLACK_Service_CBUUID {
             
             print("Service: \(service)")
-            
-            // STEP 9: look for characteristics of interest
-            // within services of interest
             peripheral.discoverCharacteristics(nil, for: service)
             
         }
@@ -459,9 +441,6 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         if service.uuid == BLACK_Battery_Service_CBUUID {
             
             print("BLACK Battery Service: \(service)")
-            
-            // STEP 9: look for characteristics of interest
-            // within services of interest
             peripheral.discoverCharacteristics(nil, for: service)
             
         }
@@ -469,9 +448,6 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         if service.uuid == YELLO_Service_CBUUID {
             
             print("YELLO Service: \(service)")
-            
-            // STEP 9: look for characteristics of interest
-            // within services of interest
             peripheral.discoverCharacteristics(nil, for: service)
             
         }
@@ -479,9 +455,6 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         if service.uuid == YELLO_Battery_Service_CBUUID {
             
             print("YELLO Battery Service: \(service)")
-            
-            // STEP 9: look for characteristics of interest
-            // within services of interest
             peripheral.discoverCharacteristics(nil, for: service)
             
         }
@@ -489,9 +462,6 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         if service.uuid == WHITE_Service_CBUUID {
             
             print("Service: \(service)")
-            
-            // STEP 9: look for characteristics of interest
-            // within services of interest
             peripheral.discoverCharacteristics(nil, for: service)
             
         }
@@ -499,9 +469,6 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         if service.uuid == WHITE_Battery_Service_CBUUID {
             
             print("WHITE Battery Service: \(service)")
-            
-            // STEP 9: look for characteristics of interest
-            // within services of interest
             peripheral.discoverCharacteristics(nil, for: service)
             
         }
@@ -663,7 +630,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             } // END if characteristic.uuid for BLACK Battery Info
         }
         
-        if (WHITE?.name == "WHITE") && (characteristic.uuid == BLACK_Battery_Characteristic_CBUUID) {
+        if (WHITE?.name == "WHITE") && (characteristic.uuid == WHITE_Battery_Characteristic_CBUUID) {
             
             print("WHITE Battery:", characteristic.value![0])
             
