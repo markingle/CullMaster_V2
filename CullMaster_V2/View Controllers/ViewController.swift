@@ -392,7 +392,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
     
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         
-        print("Peripheral: \(peripheral)")
+        //print("Peripheral: \(peripheral)")
     
     for service in peripheral.services! {
         
@@ -491,7 +491,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         
         
-        print("Service didDiscoverChar: \(service)")
+        //print("Service didDiscoverChar: \(service)")
         
         for characteristic in service.characteristics! {
             
@@ -575,8 +575,8 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         
-        print(characteristic)
-        print(peripheral)
+        //print(characteristic)
+        //print(peripheral)
      
         if characteristic.uuid == Weight_Characteristic_CBUUID {
             
@@ -591,7 +591,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         
         if  (GREEN?.name == "GREEN") && (characteristic.uuid == GREEN_Battery_Characteristic_CBUUID){
             
-            print("GREEN Battery:", characteristic.value![0])
+            //print("GREEN Battery:", characteristic.value![0])
             
             DispatchQueue.main.async { () -> Void in
                 self.GREENBatteryInfoText.text = "\(characteristic.value![0])%"
@@ -602,7 +602,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         
         if (YELLO?.name == "YELLO") && (characteristic.uuid == YELLO_Battery_Characteristic_CBUUID) {
             
-            print("YELLO Battery:", characteristic.value![0])
+            //print("YELLO Battery:", characteristic.value![0])
             
             DispatchQueue.main.async { () -> Void in
                 self.YELLOBatteryInfoText.text = "\(characteristic.value![0])%"
@@ -612,7 +612,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         
         if (RED?.name == "RED") && (characteristic.uuid == RED_Battery_Characteristic_CBUUID) {
             
-            print("RED Battery:", characteristic.value![0])
+            //print("RED Battery:", characteristic.value![0])
             
             DispatchQueue.main.async { () -> Void in
                 self.REDBatteryInfoText.text = "\(characteristic.value![0])%"
@@ -622,7 +622,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         
         if (BLACK?.name == "BLACK") && (characteristic.uuid == BLACK_Battery_Characteristic_CBUUID) {
             
-            print("BLACK Battery:", characteristic.value![0])
+            //print("BLACK Battery:", characteristic.value![0])
             
             DispatchQueue.main.async { () -> Void in
                 self.BLACKBatteryInfoText.text = "\(characteristic.value![0])%"
@@ -632,7 +632,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         
         if (WHITE?.name == "WHITE") && (characteristic.uuid == WHITE_Battery_Characteristic_CBUUID) {
             
-            print("WHITE Battery:", characteristic.value![0])
+            //print("WHITE Battery:", characteristic.value![0])
             
             DispatchQueue.main.async { () -> Void in
                 self.WHITEBatteryInfoText.text = "\(characteristic.value![0])%"
@@ -822,7 +822,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                 let minweight = minitem?.weight
                 print("Min Weight : \(String(describing: minweight))")
                 let Cork = minitem?.fish_ID  ?? "---"
-                let alert = UIAlertController(title: "Cull \(Cork) @ \(minweight ?? 000)", message: "", preferredStyle: .alert)
+                let alert = UIAlertController(title: "Cull \(Cork) @ \(minweight ?? 000)", message: "CullMaster Weight \(assign_capturedWeight)", preferredStyle: .alert)
                 sendFlashRGB(cork_to_flag: Cork, flag: "1") // <-- Start flashing the RGB on the Cork
                 alert.addAction (UIAlertAction(title: "Cull Fish", style: .default) { (alertAction) in
                     
@@ -847,7 +847,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             
             
             //Cancel action
-            alert.addAction(UIAlertAction(title: "Cancel", style: .default) { (alertAction) in
+            alert.addAction(UIAlertAction(title: "Dont Cull Fish", style: .default) { (alertAction) in
                 self.sendFlashRGB(cork_to_flag: Cork, flag: "0")  // <-- Stop flashing the RGB on the Cork
             })
             self.present(alert, animated:true, completion: nil)
@@ -890,7 +890,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                     let Cork = results.first?.name
                     self.sendFlashRGB(cork_to_flag: Cork ?? "---", flag: "1")  // <-- Start flashing the RGB on the Cork
                     print("Init Cork \(String(describing: Cork))")
-                    let alertController = UIAlertController(title: "Weight Captured \(capturedWeight ) ", message:"", preferredStyle: .alert)
+                    let alertController = UIAlertController(title: "Weight Captured \(capturedWeight ) ", message:"Cork \(Cork ?? "No Cork")", preferredStyle: .alert)
                     // add the actions (buttons)
                     alertController.addAction (UIAlertAction(title: "Cork Attached?", style: .default) { (alertAction) in
                     self.sendFlashRGB(cork_to_flag: Cork ?? "---", flag: "0")  // <-- Stop flashing the RGB on the Cork
@@ -972,6 +972,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         let data = Data(SwitchState.utf8)
         print("data = ", data)
         writeonStateValueToChar(withCharacteristic: TareFlag!, withValue: data)
+        //TareFlag?.writeValue(data, for: TareFlag!, type: .withoutResponse)
     }
     
 }
