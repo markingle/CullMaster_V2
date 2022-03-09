@@ -707,7 +707,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                 let minweight = minitem?.weight
                 print("Min Weight : \(String(describing: minweight))")
                 let Cork = minitem?.fish_ID  ?? "---"
-                let alert = UIAlertController(title: "Cull \(Cork) @ \(minweight ?? 000)", message: "", preferredStyle: .alert)
+                let alert = UIAlertController(title: "Cull \(Cork) @ \(minweight ?? 000)", message: "Weight Captured \(assign_capturedWeight)", preferredStyle: .alert)
                 sendFlashRGB(cork_to_flag: Cork, flag: "1") // <-- Start flashing the RGB on the Cork
                 alert.addAction (UIAlertAction(title: "Cull Fish", style: .default) { (alertAction) in
                     
@@ -732,7 +732,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             
             
             //Cancel action
-            alert.addAction(UIAlertAction(title: "Cancel", style: .default) { (alertAction) in
+            alert.addAction(UIAlertAction(title: "Dont Cull", style: .default) { (alertAction) in
                 self.sendFlashRGB(cork_to_flag: Cork, flag: "0")  // <-- Stop flashing the RGB on the Cork
             })
             self.present(alert, animated:true, completion: nil)
@@ -775,7 +775,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                     let Cork = results.first?.name
                     self.sendFlashRGB(cork_to_flag: Cork ?? "---", flag: "1")  // <-- Start flashing the RGB on the Cork
                     print("Init Cork \(String(describing: Cork))")
-                    let alertController = UIAlertController(title: "Weight Captured \(capturedWeight ) ", message:"", preferredStyle: .alert)
+                    let alertController = UIAlertController(title: "Weight Captured \(capturedWeight ) ", message:"Cork \(Cork ?? "No Cork")", preferredStyle: .alert)
                     // add the actions (buttons)
                     alertController.addAction (UIAlertAction(title: "Cork Attached?", style: .default) { (alertAction) in
                     self.sendFlashRGB(cork_to_flag: Cork ?? "---", flag: "0")  // <-- Stop flashing the RGB on the Cork
