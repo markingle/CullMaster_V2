@@ -7,6 +7,7 @@
 //www.splinter.com.au/2019/05/18/ios-swift-bluetooth-le/
 //github.com/espressif/esp-idf/blob/master/examples/bluetooth/bluedroid/ble/gatt_security_server/tutorial/Gatt_Security_Server_Example_Walkthrough.md
 //www.youtube.com/watch?v=TwexLJwdLEw
+//nspredicate.xyz/coredata.html
 
 
 import UIKit
@@ -125,7 +126,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        bluetoothOffLabel.alpha = 0.0
+        bluetoothOffLabel.alpha = 1.0
         tableView.dataSource = self
         tableView.delegate = self
         
@@ -166,7 +167,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             case .poweredOn:
                 print("Bluetooth status is POWERED ON")
                 DispatchQueue.main.async { () -> Void in
-                    self.bluetoothOffLabel.alpha = 0.0
+                    self.bluetoothOffLabel.alpha = 1.0
                     self.connectionActivityStatus.backgroundColor = UIColor.black
                     self.connectionActivityStatus.startAnimating()
                     
@@ -720,7 +721,7 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
             let request = Fish_Table.fetchRequest() as NSFetchRequest<Fish_Table>
             let sort = NSSortDescriptor(key: "weight", ascending: false)
             request.sortDescriptors = [sort]
-            request.fetchLimit = 5         //CHANGE THIS BACK TO 5 WHEN YOU GET MORE TinyPICO
+            request.fetchLimit = 5
             self.items = try context.fetch(request)
             DispatchQueue.main.async {
                 self.tableView.reloadData()
@@ -908,9 +909,6 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
                     })
                     alertController.addAction(UIAlertAction(title: "Cancel", style: .default) { (alertAction) in self.sendFlashRGB(cork_to_flag: Cork ?? "---", flag: "0")  })// <-- Stop flashing the RGB on the Cork
                     self.present(alertController, animated:true, completion: nil)
-                    
-                    
-                    //self.sendFlashRGB(cork_to_flag: "RED", flag: "0")  // <-- Stop flashing the RGB on the Cork
                 }
             } else {
                     self.showsmallest(assign_capturedWeight: capturedWeight)
@@ -931,6 +929,33 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
        // self.present(alert, animated:true, completion: nil)
     
     }
+
+    
+    @IBAction func resetCorks(_ sender: Any) {
+        
+
+        let entity =  NSEntityDescription.entity(forEntityName: "Cork_Table", in: context)!
+        let updateRequest = NSBatchUpdateRequest(entity: entity)
+
+        // only update one record or remove this line if you want to update all records
+        //updateRequest.predicate = NSPredicate(format: "money < %i", 10000)
+
+        // update the money to 10000, can add more attribute name and value to the hash if you want
+        updateRequest.propertiesToUpdate = ["used" : 0]
+
+        // return the number of updated objects for the result
+        updateRequest.resultType = .updatedObjectsCountResultType
+
+        do {
+          let result = try context.execute(updateRequest) as! NSBatchUpdateResult
+          print("\(result.result ?? 0) objects updated")
+          
+        } catch let error as NSError {
+          print("Could not batch update. \(error), \(error.userInfo)")
+        }
+    }
+    
+    
     
     @IBAction func corkList(){
         guard let vc = storyboard!.instantiateViewController(withIdentifier: "Cork_VC_ID") as? CorkViewController else {
@@ -972,7 +997,6 @@ class ViewController: UIViewController,CBCentralManagerDelegate, CBPeripheralDel
         let data = Data(SwitchState.utf8)
         print("data = ", data)
         writeonStateValueToChar(withCharacteristic: TareFlag!, withValue: data)
-        //TareFlag?.writeValue(data, for: TareFlag!, type: .withoutResponse)
     }
     
 }
